@@ -1,0 +1,4 @@
+<h1>New Student</h1>
+<%= render("form.html", student: @student, action: Routes.student_path(@conn,:create), conn: @conn) %>
+ <! –– assigns - [:conn, :current_user, :profile] ––>
+ <! –– from Map.keys(assigns) ––>

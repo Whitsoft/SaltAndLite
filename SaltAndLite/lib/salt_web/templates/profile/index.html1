@@ -1,0 +1,7 @@
+<ul>
+  <%= for profile <- @profile do %>
+    <strong><%= link(profile.title, to: Routes.profile_path(@conn, :show, profile))%></strong>
+    <li> <%= profile.firstname %></li>
+    <li> <%= profile.lastname %></li>
+  <% end %>
+</ul>

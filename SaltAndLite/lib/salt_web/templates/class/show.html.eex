@@ -1,0 +1,217 @@
+<%# require IEx; IEx.pry() %>
+<%# assigns ClassTitle.description - plus classes - a list of class info (map) %>
+<!--Available assigns: [:classes, :conn, :current_user, :id, :title] -->
+<html>
+<head>
+<!--crsf token is usually provided by a form - however there is no form - add our own -->
+<%= csrf_meta_tag() %>
+
+</head>
+<body>
+<p id="output"></p>
+<style>
+.table-layout {
+    text-align: center;
+    border: 1px solid black;
+    border-collapse: collapse;
+    font-family:"Trebuchet MS";
+    margin: 0 auto 0;
+}
+.table-layout td, .table-layout th {
+    border: 1px solid black;
+    padding: 5px 5px 0;
+}
+.table-layout td {
+    text-align: left;
+}
+.selected {
+    color: red;
+}
+    border: px solid black;
+    padding: 5px 5px 0;
+}
+.table-layout td {
+    text-align: left;
+}
+.selected {
+    color: blue;
+}
+table {
+  border-collapse: collapse;
+  width: 120%;
+}
+
+td {
+  height: 40px;
+}
+</style>
+<input type = "button" onclick = "cancelFunction()" id = "junk" value = "Cancel">
+
+<table id="classTable" class="table-layout">
+    <tr  onclick="(this)">
+      <th>Class title</th>
+      <th>Section</th>
+      <th>Period</th>
+      <th>Fee</th>
+      <th>Semester</th>
+      <th>Teacher</th>
+      <th>Helper1</th>
+      <th>Helper2</th>
+    </tr>
+
+  <%= for class <- @classes do%>
+ <tr data-class-id="<%= class.id %>">
+  <td><%= class.classtitle.description %></td>
+  <td><%= class.section.description %></td>
+  <td><%= class.period.time %></td>
+  <td>$<%= class.fallfee %>.00</td>
+  <td><%= class.semester %></td>
+  <td><%= class.teacher.username %></td>
+  <td><%= class.helper1.username %></td>
+  <td><%= class.helper2.username %></td>
+ </tr>
+  <% end %>
+
+
+
+<script>
+  function cancelFunction() {
+       const regid  = localStorage.getItem("regIndex");
+       window.location.replace(regid);
+}
+
+</script>
+
+<script>
+highlight_row();
+
+function highlight_row() {
+    var table = document.getElementById('classTable');
+    var cells = table.getElementsByTagName('td');
+    for (var i = 0; i < cells.length; i++) {
+        // Take each cell
+        var cell = cells[i];
+        // do something on onclick event for cell
+        cell.onclick = function () {
+            // Get the row id where the cell exists
+            var rowId = this.parentNode.rowIndex;
+            var rowsNotSelected = table.getElementsByTagName('tr');
+            for (var row = 0; row < rowsNotSelected.length; row++) {
+                rowsNotSelected[row].style.backgroundColor = "";
+                rowsNotSelected[row].classList.remove('selected');
+            }
+            var rowSelected = table.getElementsByTagName('tr')[rowId];
+            rowSelected.style.backgroundColor = "yellow";
+            rowSelected.className += " selected";
+
+            const studentid  = localStorage.getItem("studentID");
+            const classId = rowSelected.dataset.classId;
+            const semester = rowSelected.cells[4].innerText;
+            //studentid =  window["studentID"];
+
+            document.getElementById('studentid').setAttribute('value', studentid);
+            document.getElementById('classid').setAttribute('value', classId);
+            document.getElementById('semester').setAttribute('value', semester);
+
+            enableSubmit(); //enable the submit button if inputs are valid
+         }
+    }
+}
+</script>
+
+
+
+<form    name="regform" id = reg_form  action="" METHOD="POST">
+  <input hidden type="text"    name = "studentbox"  class = "required"   id = "studentid" >
+  <input hidden type="text"    name = "classbox"    class = "required"   id = "classid" >
+  <input hidden type="text"    name = "semesterbox" class = "required"   id = "semester">
+
+  <input disabled id = "submitbtn" type="submit">
+</form>
+
+
+<script>
+function disableFunction() {
+  document.getElementById("submitbtn").disabled = false;
+  }
+</script>
+
+
+
+<script>
+    //check that all 3 hidden inputs are valid
+    function enableSubmit(){
+      let inputs = document.getElementsByClassName('required');
+      //let btn = document.querySelector('input[type="submit"]');
+      let btn = document.getElementById("submitbtn");
+      let isValid = true;
+      for (var i = 0; i < inputs.length; i++){
+        let changedInput = inputs[i];
+        if (changedInput.value.trim() === "" || changedInput.value === null){
+          isValid = false;
+          break;
+      } //end if
+    }//end for
+    document.getElementById("submitbtn").removeAttribute("disabled");
+  }
+</script>
+
+<script>
+
+  // Thanks to Tim
+  // Add a handler for the form's "submit" event
+
+  document.getElementById("reg_form").addEventListener("submit", (event) => {
+    // The default behavior of form submission is to navigate, but since we're taking care of everything client-side let's prevent that
+    event.preventDefault();
+    const meta = document.querySelector('meta[name="csrf-token"]');
+    const token = meta.content;
+    const formElement = event.target;
+    let student = formElement.elements["studentbox"].value;
+    //alert(formElement.elements["classbox"].value);
+    const url = "http://localhost:4000/students/"+ student +"/registrations";
+
+    //alert(url);
+    fetch(url, {  //start fetch
+    credentials: 'same-origin',
+      method: "POST",
+
+      headers: { //start headers
+        "content-type": "application/json",
+         'x-csrf-token': token,
+      },  // end headers
+
+      body: JSON.stringify({  //start stringify
+        registration: { //start registration
+          student_id: formElement.elements["studentbox"].value,
+          class_id:   formElement.elements["classbox"].value,
+          semester:   formElement.elements["semesterbox"].value,
+        }  // end registration
+      })  //end stringify
+
+    }).then((response) => {   //start promise #1
+    alert(response.status);
+      if (!response.ok) {  //start if - if not OK throw a new error
+        throw new Error(`Bad request: ${response.status} ${response.statusText}`);
+        alert("!response.ok");
+        alert(response);
+      }  //end if
+      return response.text();
+
+    }).then((responsePayload) => {  //start promise #2 - responsePayload contains data
+     // alert(responsePayload.data);
+      console.log(responsePayload.data);
+       window.location.replace(localStorage.getItem("regIndex"));
+      formElement.reset();
+
+    }).catch((error) => { //start catch
+      //alert("ERROR creating registration");
+      console.log(error);
+     // SyntaxError: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+    }); //end catch
+
+  });
+</script>
+
+</body>
+</html>

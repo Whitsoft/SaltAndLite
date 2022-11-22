@@ -1,0 +1,24 @@
+<%# require IEx; IEx.pry() %>
+<h2>Student data for <%= @lastname %> </h2>
+ 
+<%=# form_for @student, Routes.student_path(@conn, :show ,@student.data), fn f -> %>
+ <style>
+table, th, td {
+  border: 1px solid black;
+}
+</style>
+  <table>
+    <tr>
+      <th>&nbsp;&nbsp; First name </th>
+      <th>Grade</th>
+      <th>Birthday</th>
+    </tr>
+ 
+    <tr>
+      <td>&nbsp;&nbsp;<%=  @student.data.firstname %></td>
+      <td><%=  @student.data.grade%></td>
+      <td><%=  @student.data.birthday %></td>
+    </tr>
+  </table>
+
+<%# end %> 

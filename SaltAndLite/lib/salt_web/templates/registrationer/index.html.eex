@@ -1,0 +1,188 @@
+<html>
+<!-- Available assigns: [:class_params, :classes, :conn, :current_user, :firstname, :lastname, :student_id, :titlelist] -->
+
+<p>
+  <strong><%= @firstname %> <%= @lastname %></strong>
+<p id="demo">
+<!--crsf token is usually provided by a form - however there is no form - add our own -->
+<%= csrf_meta_tag() %>
+</head>
+
+<script>
+function getCurrentURL () {
+  localStorage.setItem("regIndex",window.location.href );
+  alert(regindex);
+}
+</script
+
+<% # make a drop down list of titles %>
+<% # purpose is to display all classes for a title %>
+<label for="title">To add a class: select a class title from the list:</label>
+<p></p>
+  <select id="classtitles-select">
+  <option value="<%= 0 %>"><%= "" %></option>
+  <%= for classtitle <- @titlelist do %>
+    <option value="<%= classtitle.id %>"><%= classtitle.description %></option>
+  <% end %>
+  getCurrentURL();
+  </select>
+  <!-- Create drop down list of available classes -->
+  <script>
+     // window.location.href is the URL for the current page
+    //localStorage.setItem("studentID", studentidAssigns);  // make :student_id from assigns availble to other jscript functions
+    const classtitlesSelect = document.getElementById("classtitles-select");
+    localStorage.setItem("regIndex",window.location.href );
+    classtitlesSelect.addEventListener("change", (event) => {
+      window.location.href = "/classes/" + event.target.value;
+    })
+</script>
+
+</ul>
+
+ <style>
+ table {
+   border-collapse: collapse;
+ }
+table, th, td {
+  border: 1px solid black;
+}
+th, td {
+  padding: 6px;
+}
+</style>
+
+ <table id="classTable" class="table-layout">
+    <tr  onclick="(this)">
+      <th>RegID</th>
+      <th>ClassID </th>
+      <th>Class title</th>
+      <th>Section</th>
+      <th>Period</th>
+      <th>Fee</th>
+      <th>Semester</th>
+      <th>Teacher</th>
+      <th>Helper1</th>
+      <th>Helper2</th>
+
+    </tr>
+
+     <%= for {class, _i} <- Enum.with_index(@classes,0) do%>
+      <%= for {item, _k} <- Enum.with_index(class,0) do%>
+        <td> <%= item %> </td>
+      <% end %>
+
+      </tr>
+    <% end %>
+  </table>
+
+
+<input id =  "cancelbtn" type = "button" onclick = "hideCancel()"  value = "Cancel">
+<input id =  "deletebtn" type = "button" onclick = "hideDelete()"  value = "Delete Yellow">
+
+<script>
+   document.getElementById("cancelbtn").style.visibility = 'hidden';
+   document.getElementById("deletebtn").style.visibility = 'hidden';
+</script>
+
+
+<script>
+  var hideCancel = function(){
+        document.getElementById("cancelbtn").style.visibility = 'hidden';
+        document.getElementById("deletebtn").style.visibility = 'hidden';
+        unHighlightRows();
+
+  };
+</script>
+
+<script>
+
+  var hideDelete = function(){
+    let regPath = window.location.pathname;
+    const studentid = localStorage.getItem("studentID");
+    const classid   = localStorage.getItem("classID");
+    const semesterid   = localStorage.getItem("semester");
+    const registrationid   = localStorage.getItem("regID").toString();
+    const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+  let regurl = "http://localhost:4000/students/"+ studentid +"/registrations/"+ registrationid +"/";
+
+fetch(regurl, {
+  method: 'DELETE',
+  headers: { //start headers
+    "content-type": "application/json",
+  },  // end headers
+})  // end fetch function
+.then(res => res.text())
+ // or res.json()
+.then(res => console.log(res))
+
+  hideCancel();
+  location.reload();
+  };
+</script>
+
+
+<script>
+highlight_row();
+function highlight_row() {
+    var table = document.getElementById('classTable');
+    var cells = table.getElementsByTagName('td');
+    for (var i = 0; i < cells.length; i++) {
+        // Take each cell
+        var cell = cells[i];
+        // do something on onclick event for cell
+        cell.onclick = function () {
+           // Get the row id where the cell exists
+            var rowId = this.parentNode.rowIndex;
+            var rowsNotSelected = table.getElementsByTagName('tr');
+            for (var row = 0; row < rowsNotSelected.length; row++) {
+                rowsNotSelected[row].style.backgroundColor = "";
+                rowsNotSelected[row].classList.remove('selected');
+            }
+            var rowSelected = table.getElementsByTagName('tr')[rowId];
+            rowSelected.style.backgroundColor = "yellow";
+            rowSelected.className += " selected";
+            // studentID , classID, semester - also identify a unique registration
+            // trick to get an assigns into a javascript variable
+            let studentID  = <%=@student_id %>
+
+            let regID      = rowSelected.cells[0].innerHTML.trim();  //unique registration
+            let classID    = rowSelected.cells[1].innerHTML;
+            let semester   = rowSelected.cells[6].innerHTML;
+            localStorage.setItem("regID", regID);
+            localStorage.setItem("studentID", studentID);
+            localStorage.setItem("classID", classID);
+            localStorage.setItem("semester", semester[1]);
+            document.getElementById("cancelbtn").style.visibility = 'visible';
+            document.getElementById("deletebtn").style.visibility = 'visible';
+         }
+    }
+}
+</script>
+
+<script>
+var unHighlightRows = function(){
+    var table = document.getElementById('classTable');
+    var cells = table.getElementsByTagName('td');
+    for (var i = 0; i < cells.length; i++) {
+         var cell = cells[i];
+            var rowId = table.rowIndex;
+            var rowsNotSelected = table.getElementsByTagName('tr');
+            for (var row = 0; row < rowsNotSelected.length; row++) {
+                rowsNotSelected[row].style.backgroundColor = "";
+                rowsNotSelected[row].classList.remove('selected');
+            }
+    }
+}
+</script>
+
+<script>
+</script>
+
+<span><%=# link "Back", to: Routes.student_path(@conn, :index) %></span>
+<span><%=# link "New Registration", to: Routes.student_registration_path(@conn, :new, @student_id) %></span>
+<span><%=# link "New Registration", to: Routes.student_registration_path(@conn, :new) %></span>
+
+
+
+</body>
+</html>

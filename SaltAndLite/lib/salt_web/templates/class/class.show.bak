@@ -1,0 +1,258 @@
+<%# require IEx; IEx.pry() %>
+<%# assigns ClassTitle.description - plus classes - a list of class info (map) %>
+<!--Available assigns: [:classes, :conn, :current_user, :id, :title] -->
+<html>
+<body>
+<head>
+<p id="output"></p>
+<style>
+.table-layout {
+    text-align: center;
+    border: 1px solid black;
+    border-collapse: collapse;
+    font-family:"Trebuchet MS";
+    margin: 0 auto 0;
+}
+.table-layout td, .table-layout th {
+    border: 1px solid grey;
+    padding: 5px 5px 0;
+}
+.table-layout td {
+    text-align: left;
+}
+.selected {
+    color: red;
+}
+    border: 1px solid grey;
+    padding: 5px 5px 0;
+}
+.table-layout td {
+    text-align: left;
+}
+.selected {
+    color: red;
+}
+
+
+</style>
+
+<html>
+<body>
+
+<input type = "button" onclick = "cancelFunction()" id = "junk" value = "Cancel">
+
+<table id="classTable" class="table-layout">
+    <tr  onclick="(this)">
+      <th>Class title</th>
+      <th>Section</th>
+      <th>Period</th>
+      <th>Fee</th>
+      <th>Semester</th>
+      <th>Teacher</th>
+      <th>Helper1</th>
+      <th>Helper2</th>
+    </tr>
+
+  <%= for class <- @classes do%>
+ <tr data-class-id="<%= class.id %>">
+  <td><%= class.classtitle.description %></td>
+  <td><%= class.section.description %></td>
+  <td><%= class.period.time %></td>
+  <td>$<%= class.fallfee %>.00</td>
+  <td><%= class.semester %></td>
+  <td><%= class.teacher.username %></td>
+  <td><%= class.helper1.username %></td>
+  <td><%= class.helper2.username %></td>
+ </tr>
+  <% end %>
+
+
+
+<script>
+  function cancelFunction() {
+       const regid  = localStorage.getItem("regIndex");
+       window.location.replace(regid);
+}
+
+</script>
+
+<script>
+highlight_row();
+
+function highlight_row() {
+    var table = document.getElementById('classTable');
+    var cells = table.getElementsByTagName('td');
+    for (var i = 0; i < cells.length; i++) {
+        // Take each cell
+        var cell = cells[i];
+        // do something on onclick event for cell
+        cell.onclick = function () {
+            // Get the row id where the cell exists
+            var rowId = this.parentNode.rowIndex;
+            var rowsNotSelected = table.getElementsByTagName('tr');
+            for (var row = 0; row < rowsNotSelected.length; row++) {
+                rowsNotSelected[row].style.backgroundColor = "";
+                rowsNotSelected[row].classList.remove('selected');
+            }
+            var rowSelected = table.getElementsByTagName('tr')[rowId];
+            rowSelected.style.backgroundColor = "yellow";
+            rowSelected.className += " selected";
+
+            const studentid  = localStorage.getItem("studentID");
+            const classId = rowSelected.dataset.classId;
+            const semester = rowSelected.cells[4].innerText;
+            //studentid =  window["studentID"];
+
+            document.getElementById('studentid').setAttribute('value', studentid);
+            document.getElementById('classid').setAttribute('value', classId);
+            document.getElementById('semester').setAttribute('value', semester);
+            //function disableFunction();
+            enableSubmit(); //enable the save button if inputs are valid
+         }
+    }
+}
+</script>
+
+<script>
+
+  // Thanks to Tim
+  // Add a handler for the form's "submit" event
+  let junk =  document.getElementByID("reg_form");
+  console.log(junk);
+  alert(junk);
+S
+  document.getElementById("reg_form").addEventListener("submit", (event) => {
+    // The default behavior of form submission is to navigate, but since we're taking care of everything client-side let's prevent that
+    event.preventDefault();
+    const formElement = event.target;
+    fetch("/api/registration", {  //parens fetch
+      method: "POST",
+
+      headers: {
+        "content-type": "application/json",
+      },
+<%= IO.puts("HELLO")%>
+      body: JSON.stringify({  //parens pody
+        registration: {
+          student_id: formElement.elements["studentbox"].value,
+          class_id:   formElement.elements["classbox"].value,
+          semester:   formElement.elements["semesterbox"].value,
+        }
+      }) //end parens body
+alert("JSON");
+
+    }).then((response) => {   //end addEventListener
+      if (!response.ok) {
+        throw new Error(`Bad request: ${response.status} ${response.statusText}`);
+      }
+      return response.json();
+      
+    }).then((responsePayload) => {
+      // Note the person object is nested under the `data` property
+      console.log(responsePayload.data);
+
+      // TODO: Now what? Should we navigate the user away from the form?
+      // Should we reset the form and let them continue to create another user?
+
+      formElement.reset();
+    }).catch((error) => {
+      alert("ERROR creating registration");
+
+      console.log(error);
+    });
+  });
+</script>
+
+
+
+<form    name="regform" id = reg_form  action="" METHOD="POST">
+  <input hidden type="text"    name = "studentbox"  class = "required"   id = "studentid" >
+  <input hidden type="text"    name = "classbox"    class = "required"   id = "classid" >
+  <input hidden type="text"    name = "semesterbox" class = "required"   id = "semester">
+
+  <input disabled id = submitbtn type="submit">
+</form>
+
+
+<script>
+function disableFunction() {
+  document.getElementById("save").disabled = false;
+  }
+</script>
+
+<script>
+
+  // Thanks to Tim
+  // Add a handler for the form's "submit" event
+  let junk =  document.getElementByID("reg_form");
+  console.log(junk);
+  alert(junk);
+
+  document.getElementById("reg_form").addEventListener("submit", (event) => {
+    // The default behavior of form submission is to navigate, but since we're taking care of everything client-side let's prevent that
+    // event.preventDefault() basically cancels the default action
+    event.preventDefault();
+
+    // construct the event to  use
+    const formElement = event.target;
+
+    fetch("/api/registration", {  //parens fetch
+      method: "POST",
+
+      headers: {
+        "content-type": "application/json",
+      },
+
+      body: JSON.stringify(
+          {registration: {
+            student_id: formElement.elements["studentbox"].value,
+            class_id:   formElement.elements["classbox"].value,
+            semester:   formElement.elements["semesterbox"].value,
+          }
+        } //end registration
+      ) //end parens body
+
+    }).then((response) => {   //end addEventListener - (1) bad request throw an error - see below
+      if (!response.ok) {
+        throw new Error(`Bad request: ${response.status} ${response.statusText}`);
+      }
+
+      return response.json();
+
+    }).then((responsePayload) => { //end addEventListener - (2) request error OK, response OK
+
+      console.log(responsePayload.data);
+
+      // TODO: Now what? Should we navigate the user away from the form?
+
+      formElement.reset();
+    }).catch((error) => { //                  catch the thrown error - display an alert message and log the error
+      alert("ERROR creating registration");
+
+      console.log(error);
+    });
+  });
+</script>
+
+</body>
+
+<script>
+    //check that all 3 hidden inputs are valid
+    function enableSubmit(){
+      let inputs = document.getElementsByClassName('required');
+      //let btn = document.querySelector('input[type="submit"]');
+      var btn = document.getElementById("submit");
+      let isValid = true;
+      for (var i = 0; i < inputs.length; i++){
+      let changedInput = inputs[i];
+      if (changedInput.value.trim() === "" || changedInput.value === null){
+        isValid = false;
+      break;
+      }
+    }
+    document.getElementById("submitbtn").removeAttribute("disabled");
+  }
+</script>
+</body>
+</html>
+

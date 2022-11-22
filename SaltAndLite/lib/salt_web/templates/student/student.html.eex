@@ -1,0 +1,8 @@
+<ul>
+  <h1> Here we are in students </h1>
+  <%= @students %>
+ 
+  <%= for student <- @students do %>
+    <li><strong><%= student.firstname %></li>
+  <% end %>
+</ul>

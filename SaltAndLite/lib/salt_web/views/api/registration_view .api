@@ -1,0 +1,17 @@
+defmodule SaltWeb.API.RegistrationView do
+  use SaltWeb, :view
+
+  ############################################################################################################################
+  # Phoenix uses the Jason library to encode JSON, so all we need to do in our views is to format the data we would          #
+  # like to respond with as a list or a map, and Phoenix will do the rest. While it is possible to respond with JSON         #
+  # back directly from the controller and skip the view, Phoenix views provide a much more structured approach for doing so. #
+  # Let's take our PageController, and see what it may look like when we respond                                             #
+  # with some static page maps as JSON, instead of HTML.                                                                     #
+  ############################################################################################################################
+
+  # def delete(conn,  %{"student_id" => student_id,  "class_id" => class_id, "semester"=> semester}) do
+  #  render(conn, "delete.json", student_id :student_id, class_id :class_id, semester :semester)
+  # end
+end
+
+# registration_path  DELETE  /api/registrations/:id                   SaltWeb.RegistrationController :delete

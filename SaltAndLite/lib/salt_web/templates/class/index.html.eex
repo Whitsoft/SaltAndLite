@@ -1,0 +1,114 @@
+
+<html>
+<!--Available assigns: [] -->
+<body>
+
+IO.puts("SHOWING ASSIGNS WHEN NEED TO KNOW THIS")
+<%= @classid %> = @classid;
+<% # make a drop down list of titles %>
+<% # purpose is to display all classes for a title %>
+<h2> templates class index </h2>
+<!--reference name or manipulate id -->
+<P>
+<h2> for="title">Choose your class title from the list:</h2>
+</p>
+
+</datalist>
+  <span id="spanresult"></span>
+
+  <script>
+  console.log("script")
+    let features =  'scrollbars=yes","resizable=yes,top=200,left=400,width=1200,height=700 menubar=yes,location=yes,status=no';
+    var getvalue=document.getElementsByName('gettitles')[0];
+
+    getvalue.addEventListener('input', function()
+    { console.log("class index function")
+      var classtitle = this.value;
+      document.getElementById("spanresult").innerHTML="Select value is : "+this.value;
+      console.log(classtitle)
+      const titleArray = classtitle.split(" ");
+      console.log(titleid)
+      window.open("http://localhost:4000/classes/"+titleid, features);
+    });
+</script>
+
+<span id = "spanresult"></span>
+
+</ul>
+
+ <style>
+
+ table {
+   border-collapse: collapse;
+ }
+
+table, th, td {
+  border: 1px solid black;
+}
+
+th, td {
+  padding: 6px;
+}
+</style>
+
+  <table id="classTable" class="table-layout">
+    <tr  onclick="(this)">
+      <th>ClassID </th>
+      <th>Class title</th>
+      <th>Section</th>
+      <th>Period</th>
+      <th>Fee</th>
+      <th>Semester</th>
+      <th>Teacher</th>
+      <th>Helper1</th>
+      <th>Helper2</th>
+    </tr>
+
+
+    <%= for {class, _i} <- Enum.with_index(@classes,0) do%>
+      <%= for {item, _k} <- Enum.with_index(class,0) do%>
+        <td> &nbsp;  <%= item %> </td>
+      <% end %>
+
+      </tr>
+    <% end %>
+  </table>
+
+<script>
+highlight_row();
+<% IO.puts("Registration index.html") %>
+function highlight_row() {
+  console.log("INDEX")
+    var table = document.getElementById('classTable');
+    var cells = table.getElementsByTagName('td');
+    for (var i = 0; i < cells.length; i++) {
+        // Take each cell
+        var cell = cells[i];
+        // do something on onclick event for cell
+        cell.onclick = function () {
+           // Get the row id where the cell exists
+            var rowId = this.parentNode.rowIndex;
+            var rowsNotSelected = table.getElementsByTagName('tr');
+            for (var row = 0; row < rowsNotSelected.length; row++) {
+                rowsNotSelected[row].style.backgroundColor = "";
+                rowsNotSelected[row].classList.remove('selected');
+            }
+            var rowSelected = table.getElementsByTagName('tr')[rowId];
+            rowSelected.style.backgroundColor = "yellow";
+            rowSelected.className += " selected";
+
+            let classID = rowSelected.cells[0].innerHTML;
+            let text = classID[0].toString();
+
+         }
+    }
+
+}
+</script>
+
+<span><%= link "Back", to: Routes.student_path(@conn, :index) %></span>
+
+
+
+</body>
+</html>

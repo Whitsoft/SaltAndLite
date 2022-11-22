@@ -1,0 +1,26 @@
+<h1> New Registration </h1>
+<!--Available assigns: [] -->
+
+</ul>
+<%= IO.puts("new registration template") %>
+<%= IO.puts("Registration.New") %>
+
+<FORM  NAME="myform"   ACTION="" METHOD="GET">
+<INPUT TYPE="hidden"   NAME="inputbox0" VALUE="Class ID"><P>
+<INPUT TYPE="hidden"   NAME="inputbox1" VALUE="Semester ID"><P>
+<INPUT TYPE="hidden"   NAME="inputbox2" VALUE="Student ID"><P>
+<INPUT TYPE="button"   NAME="button" Value="Click" onmouseover="testResults(this.form)">
+<INPUT TYPE="button"   NAME="button" Value="Submit" onmouseover="testResults(this.form)">
+
+</FORM>
+
+<SCRIPT LANGUAGE="JavaScript">
+function testResults (form) {
+   classid    = localStorage.getItem("classID");
+   semesterid = localStorage.getItem("semesterID");
+   studentid  = localStorage.getItem("studentID");
+   form.inputbox0.value = studentid;
+   form.inputbox1.value = classid;
+   form.inputbox2.value = semesterid;
+}
+</SCRIPT>

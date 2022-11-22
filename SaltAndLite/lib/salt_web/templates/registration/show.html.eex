@@ -1,0 +1,35 @@
+<%# require IEx; IEx.pry() %>
+<h2>Registration data for <%= @student_name%> </h2>
+
+<%=# form_for @student, Routes.student_path(@conn, :show ,@student.data), fn f -> %>
+
+<% # @student_ID appears to be a place holder only %>
+ <% IO.puts("registration show classes") %>
+  <style>
+table, th, td {
+  border: 1px solid black;
+}
+
+
+</style>
+  <table>
+   <tr>
+      <th>&nbsp;&nbsp; Name </th>
+      <th>Semester</th>
+      <th>Class title</th>
+      <th>Section</th>
+      <th>Period</th>
+      <th>Fee</th>
+    </tr>
+
+    <tr>
+      <td>&nbsp;&nbsp;<%=  @student_name %></td>
+      <td><%=  @semester%></td>
+      <td><%=  @classtitle %></td>
+      <td><%=  @section %></td>
+      <td><%=  @period %></td>
+      <td><%=  @fee %></td>
+    </tr>
+
+  </table>
+  <%= IO.puts("SHOEs STUDENT HTML") %>

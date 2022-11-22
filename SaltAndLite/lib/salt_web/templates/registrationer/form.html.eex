@@ -1,0 +1,36 @@
+<%= IO.puts("FORM") %>
+<%= form_for @registration, @action, fn f -> %>
+  <%= if @registration.action do %>
+    <div class="alert alert-danger">
+      <p>Oops, something went wrong! Please check the errors below.</p>
+    </div>
+  <% end %>
+<script>
+
+select(form, :student_id, 0..120)
+#=> <select id="user_age" name="user[age]">
+#   <option value="0">0</option>
+#   ...
+#   <option value="120">120</option>
+#   </select>
+</script>
+  <div>
+    <label for="StudentID"> student_id:</label>
+    <%= text_input f, :student_id %>
+    <%= error_tag f,  :student_id %>
+  </div>
+  <div>
+    <label for="ClassID"> class_id:</label>
+    <%= text_input f, :class_id%>
+    <%= error_tag f,  :class_id %>
+  </div>
+    <div>
+    <label for="Semester"> semester:</label>
+    <%= text_input f, :semester %>
+    <%= error_tag f,  :semester %>
+  </div>
+  <div>
+    <%= submit "Save" %>
+  </div>
+</form>
+<% end %>

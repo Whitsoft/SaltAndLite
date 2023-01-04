@@ -3,7 +3,7 @@ defmodule SaltWeb.ProfileController do
 
   alias Salt.Profile
 
-  plug :require_logged_in_user
+  plug(:require_logged_in_user)
 
   # plug :prevent_unauthorized_access when action in [:show]
 
@@ -14,7 +14,6 @@ defmodule SaltWeb.ProfileController do
   # layout: {SaltWeb.LayoutView, "showprofile.html"})
 
   def index(conn, _params) do
-    IO.puts("Profile Index")
     profile = Salt.new_profile()
     render(conn, "index.html", profile: profile)
   end
@@ -48,15 +47,21 @@ defmodule SaltWeb.ProfileController do
     userid = current_user.id
     # return nil or return a profile changeset
     profile = Salt.check_profile(userid)
-    action = 1
+
+    submitter = nil
 
     case profile do
       nil ->
-        render(conn, "new.html", profile: profile, current_user: current_user, action: action)
+        render(conn, "new.html",
+          profile: profile,
+          current_user: current_user,
+          submitter: submitter
+        )
 
       _ ->
         render(conn, "show.html",
           profile: profile,
+          submitter: submitter,
           layout: {SaltWeb.LayoutView, "showprofile.html"}
         )
     end
@@ -84,19 +89,32 @@ defmodule SaltWeb.ProfileController do
   # %{"id" => id}) do
   def edit(conn, _params) do
     current_user = Map.get(conn.assigns, :current_user)
+    # get user id - links to user table
+    # get a user changeset gicen the id
     userid = current_user.id
     # changeset
     profile = Salt.show_profile(userid)
-    render(conn, "edit.html", profile: profile, conn: conn)
+    IO.inspect(profile.data.lastname)
+
+    submitter = 1
+    action = 1
+
+    render(conn, "edit.html",
+      profile: profile,
+      submitter: submitter,
+      action: action,
+      conn: conn
+    )
   end
 
   def update(conn, profile_params) do
+    IO.puts("UPDATE PROFILE")
     current_user = Map.get(conn.assigns, :current_user)
     userid = current_user.id
     profile = Salt.get_profile(userid)
     # params = Salt.Profile.changeset(profile_params)
     case Salt.update_profile(profile, profile_params) do
-      {:ok, profile} -> redirect(conn, to: Routes.profile_path(conn, :show, profile))
+      {:ok, profile} -> redirect(conn, to: Routes.profile_path(conn, :show))
       {:error, profile} -> render(conn, "edit.html", profile: profile)
     end
   end

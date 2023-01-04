@@ -1,6 +1,6 @@
 defmodule SaltWeb.Router do
   use SaltWeb, :router
-  alias Salt.Plug.AuthenticateUserSession
+  # alias Salt.Plug.AuthenticateUserSession
 
   ############################################################################
   # See https://www.youtube.com/watch?v=DHwUmDrWNys&ab_channel=AlchemistCamp #
@@ -10,6 +10,7 @@ defmodule SaltWeb.Router do
   ############################################################################
 
   @options [:show, :new, :create, :edit, :update, :delete, :index]
+  @ioptions [:edit, :update, :new, :show, :create, :delete]
   @roptions [:show, :new, :create, :index, :delete]
 
   pipeline :browser do
@@ -39,9 +40,10 @@ defmodule SaltWeb.Router do
     #########################################
 
     get("/", PageController, :index)
-    resources("/users", UserController, only: [:show, :new, :create])
-    resources("/profiles", ProfileController, singleton: true)
-    resources("/classes", ClassController, only: @roptions)
+    resources("/users", UserController)
+    # look into this singleton: true)
+    resources("/profiles", ProfileController, only: @ioptions, singleton: true)
+    resources("/classes", ClassController, only: @options)
     ######################################################################
     #  student_class_path and student_registration_path nested resources #
     ######################################################################
@@ -70,7 +72,7 @@ defmodule SaltWeb.Router do
   # you can use Plug.BasicAuth to set up some basic authentication
   # as long as you are also using SSL (which you should anyway).
   if Mix.env() in [:dev, :test] do
-    import Phoenix.LiveDashboard.Router
+    # import Phoenix.LiveDashboard.Router
 
     scope "/" do
       pipe_through(:browser)
@@ -78,4 +80,6 @@ defmodule SaltWeb.Router do
       # live_dashboard("/dashboard", metrics: SaltWeb.Telemetry)
     end
   end
+
+  IO.inspect(:application.get_key(:my_app, :modules))
 end

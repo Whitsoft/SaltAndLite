@@ -1,7 +1,0 @@
-<ul>
-    <strong><%= link("select", to: Routes.student_path(@conn, :show, student))%></strong>
-    <li> <%= student.firstname%> <%= @lastname %></li>
-  <% end %>
-</ul>
-render(conn, "show.html", %{student: student, student_id: student_id, lastname: lastname,
-      layout: {AuctionWeb.LayoutView, "showstudent.html"}})  # use a different layout than app

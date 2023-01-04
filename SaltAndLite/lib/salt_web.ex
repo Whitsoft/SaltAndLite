@@ -20,7 +20,11 @@ defmodule SaltWeb do
   def controller do
     quote do
       use Phoenix.Controller, namespace: SaltWeb
-
+      import SaltWeb.Router.Helpers
+      import SaltWeb.ErrorHelpers
+      # Let's add this one
+      import SaltWeb.InputHelpers
+      import SaltWeb.Gettext
       import Plug.Conn
       alias SaltWeb.Router.Helpers, as: Routes
     end
@@ -33,6 +37,7 @@ defmodule SaltWeb do
         namespace: SaltWeb
 
       # Import convenience functions from controllers
+
       import Phoenix.Controller,
         only: [get_flash: 1, get_flash: 2, view_module: 1, view_template: 1]
 
@@ -79,6 +84,7 @@ defmodule SaltWeb do
   def channel do
     quote do
       use Phoenix.Channel
+      import SaltWeb.Gettext
     end
   end
 
@@ -94,6 +100,7 @@ defmodule SaltWeb do
       import Phoenix.View
 
       import SaltWeb.ErrorHelpers
+      import SaltWeb.Gettext
       alias SaltWeb.Router.Helpers, as: Routes
       # import SaltWeb.GlobalHelpers
     end

@@ -1,16 +1,15 @@
 defmodule Salt.Registration do
   use Ecto.Schema
   import Ecto.Changeset
-  alias Salt.{Class, Student}
 
   schema "registrations" do
     # field :student_id,  :integer
     # field :class_id,    :integer
-    field :semester, :integer
+    field(:semester, :integer)
     # reference registration.class    - class_id is a foreign key
-    belongs_to :class, Salt.Class
+    belongs_to(:class, Salt.Class)
     # reference registration.students - student_id is a foreign key
-    belongs_to :student, Salt.Student
+    belongs_to(:student, Salt.Student)
     # :registration_id field comes from registration.id
     # :class_id field comes from class.id
     timestamps()

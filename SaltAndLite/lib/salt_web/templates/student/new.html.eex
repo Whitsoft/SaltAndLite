@@ -1,4 +1,29 @@
-<h1>New Student</h1>
-<%= render("form.html", student: @student, action: Routes.student_path(@conn,:create), conn: @conn) %>
- <! –– assigns - [:conn, :current_user, :profile] ––>
- <! –– from Map.keys(assigns) ––>
+<h1>New Student Entry</h1>
+<%= IO.puts("NEW STUDENT") %>
+<%=# assigns.userid %>
+<%= IO.inspect(@student.action) %>
+<%= form_for @student, Routes.student_path(@conn, :create), fn f -> %>
+  <%= if @student.action do %>
+    <div class="alert alert-danger">
+      There are errors in your submission idiot.
+       <br />
+      Please correct them below.
+    </div>
+  <% end %>
+
+  <%= label f,      "First Name" %>
+  <%= error_tag f,  :firstname  %>
+  <%= text_input f, :firstname  %>
+
+  <%= label f,      "Grade"  %>
+  <%= error_tag f,  :grade %>
+  <%= text_input f, :grade %>
+
+  <%= label f,      "Birthday" %>
+  <%= error_tag f,  :birthday %>
+  <%= date_input f, :birthday %>
+
+  <div>
+    <%= submit "Submit" %>
+  </div>
+<% end %>

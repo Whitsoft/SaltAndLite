@@ -1,5 +1,4 @@
 <%= form_for @student, @action, fn f -> %>
-<%= IO.puts("FORM FOR") %>
 
   <%= if @student.action do %>
     <div class="alert alert-danger">

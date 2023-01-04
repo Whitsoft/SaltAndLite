@@ -9,8 +9,10 @@ defmodule SaltWeb.Authenticator do
 
   # 2'nd requirement
   def call(conn, _opts) do
-    # IO.inspect(conn)
+    configure_session(conn, drop: true)
+    # get_session returns value for :user_id
 
+    # user id from database such as 67 for Holly
     user =
       conn
       |> get_session(:user_id)

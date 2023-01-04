@@ -1,5 +1,6 @@
 defmodule SaltWeb.StudentController do
   use SaltWeb, :controller
+  use SaltWeb.CurrentUser
   alias Salt.Student
   # require IEx
   # import Salt.Student
@@ -10,13 +11,15 @@ defmodule SaltWeb.StudentController do
   # @profile_map = %{title: title, lastname: lastname, firstname: firstname, spousename: spousename, streetaddress: streetaddress, city: city,
   # state: state, zipcode: zipcode, phoneone: phoneone, phonetwo: phonetwo}
 
-  def index(conn, _params) do
+  def index(conn, _params, _opts) do
     current_user = Map.get(conn.assigns, :current_user)
     # a user has id - students  include user_id
     userid = current_user.id
+
     lastname = Salt.get_user_lastname(userid)
     # students is a map  salt.User - it includes a LIST of student maps
     students = Salt.show_students(userid)
+
     # We need a list of changesets
     # The assigns variable, (3r'd parameter of render), is a map - the map symbols are optional - but I don't like ambiguity
     # In index.html - @students will equate to value of studentinfo,students - @lastname to value of last_name
@@ -38,7 +41,8 @@ defmodule SaltWeb.StudentController do
   # Suppose no id was supplied or perhaps user_id was supplied #
   # %{"id" => id} pattern match - id must match string "id"    #
   ##############################################################
-  def show(conn, %{"id" => id}) do
+  def show(conn, %{"id" => id}, _opts) do
+    # _opts is the user changeset (parent of student)
     current_user = Map.get(conn.assigns, :current_user)
     userid = current_user.id
     lastname = Salt.get_user_lastname(userid)
@@ -48,12 +52,11 @@ defmodule SaltWeb.StudentController do
     # actual id in student table
     student_id = student.data.id
     reg_list = Salt.get_registration_by_one(student_id)
+
     reg_map = Enum.at(reg_list, 0)
 
     registration_id = reg_map.id
     # assign student to @student and student_id to @student_id and lastname to @lastname
-    IO.puts("STUDENT CONTROLLER INDEX")
-
     conn
     |> assign(:student, student)
     |> assign(:student_id, student_id)
@@ -66,10 +69,33 @@ defmodule SaltWeb.StudentController do
   end
 
   # conn - a plug containing request and response information.
-  def new(conn, _params) do
-    student = Salt.new_student()
-    # , conn: conn)
-    render(conn, "new.html", student: student)
+
+  #############################################
+  # Salt.new_student is a new empty changeset #
+  #############################################
+  def new(conn, _params, _opts) do
+    # get an empty student changeset
+    student =
+      Salt.new_student()
+      |> IO.inspect()
+
+    # get user_id from conn
+    userid = Map.get(conn.assigns, :current_user).id
+    IO.puts("STUDENT CHANGESET DATA")
+    # Cool trick to insert action into changeset
+    student =
+      %{student | action: :create}
+      |> IO.inspect()
+
+    # foreign key user (id) is in the conn
+    # includes conn.assigns.id (our user_id) as id
+    render(conn, "new.html",
+      # includes student.changes.user_id (our user_id)
+      student: student,
+      # just our user_id as a single variable
+      userid: userid,
+      action: Routes.student_path(conn, :create)
+    )
   end
 
   ######################################################################
@@ -77,24 +103,34 @@ defmodule SaltWeb.StudentController do
   # What did we  request ?  student_params must include key "student"  #
   # student_params may, however, include other keys                    #
   ######################################################################
-  def create(conn, %{"student" => student_params}) do
+  def create(conn, %{"student" => student_params}, _opts) do
     # get current_user
     # from a Map - get the value for a key - in this case from conn.assigns
     current_user = Map.get(conn.assigns, :current_user)
     # get current_user.id
     userid = current_user.id
+
+    lastname = Salt.get_profile_lastname(userid)
+
     # insert user :id into student :user_id
     # The Map.put/3 function takes three arguments: a map, a key and a value.
     # It will then return an updated version of the original map.
+    # user_id was not provided by the form
     studentparams = Map.put(student_params, "user_id", userid)
     # %Student{}#Salt.Student
 
-    stuff = Student.changeset(%Student{}, studentparams)
-    # stuff = assign(stuff, :action, Routes.student_path(conn, :show))
+    student_changeset = Student.changeset(%Student{}, studentparams)
 
-    # Salt.insert_student(studentparams) do
-    case stuff do
-      {:ok, student} -> redirect(conn, to: Routes.student_path(conn, :show, student))
+    student_insert =
+      Salt.insert_student(student_changeset.changes)
+      |> IO.inspect()
+
+    IO.puts("Student_id")
+    student_id = elem(student_insert, 1).id
+    IO.inspect(student_id)
+    # redirect(conn, to: Routes.student_path(conn, :show, student_id))
+    case student_insert do
+      {:ok, student} -> render(conn, "show.html", student: student)
       {:error, student} -> render(conn, "new.html", student: student)
     end
   end
@@ -104,14 +140,15 @@ defmodule SaltWeb.StudentController do
   # Note. The fat arrow designates a key => value pair within a map.    #
   # where the name of the map is assigned to the variable placeholder x #
   #######################################################################
-  #
-  def edit(conn, %{"id" => id}) do
+
+  def edit(conn, %{"id" => id}, _opts) do
     current_user = Map.get(conn.assigns, :current_user)
     # get user id - links to user table
     userid = current_user.id
     # get student changeset by student.id  - firstname, grade, birthday
     # student is a changeset presumabley empty
     student = Salt.show_student(id)
+
     student_id = student.data.id
     firstname = student.data.firstname
     # lastname is contained in profile belonging to user
@@ -127,10 +164,9 @@ defmodule SaltWeb.StudentController do
     |> render("edit.html")
   end
 
-  def update(conn, %{"id" => id, "student" => params}) do
+  def update(conn, %{"id" => id, "student" => params}, _opts) do
     # student is a changeset - with data from the students table before updating
     student = Salt.get_student(id)
-    IO.puts("TO Salt.update")
     # send student changeset along with the map of changes
 
     case Salt.update_student(student, params) do

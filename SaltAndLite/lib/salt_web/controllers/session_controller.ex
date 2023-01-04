@@ -2,6 +2,7 @@ defmodule SaltWeb.SessionController do
   use SaltWeb, :controller
 
   def new(conn, _params) do
+    # conn = clear_session(conn)
     render(conn, "new.html")
   end
 
@@ -18,15 +19,9 @@ defmodule SaltWeb.SessionController do
         |> put_flash(:error, "That username and password combination can not be found")
         |> render("new.html")
     end
-
-    # case
   end
 
-  # def
-
   def delete(conn, _params) do
-    IO.puts("DELETE DELETE DELETE")
-
     conn
     # clear any cookies in the users browser of any data indicating that user is logged in.
     |> clear_session()

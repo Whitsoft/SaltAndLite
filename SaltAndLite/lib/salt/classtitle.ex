@@ -1,10 +1,10 @@
 defmodule Salt.Classtitle do
   use Ecto.Schema
-  import Ecto.Changeset
+  # import Ecto.Changeset
   # alias Salt.{Class, Classtitle}
   schema "classtitles" do
-    field :description, :string
-    has_many :classes, Salt.Class
+    field(:description, :string)
+    has_many(:classes, Salt.Class)
     timestamps()
   end
 

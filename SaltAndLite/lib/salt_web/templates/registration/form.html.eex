@@ -1,4 +1,4 @@
-<%= IO.puts("FORM") %>
+<%= IO.puts("FORM CLASS") %>
 <%= form_for @registration, @action, fn f -> %>
   <%= if @registration.action do %>
     <div class="alert alert-danger">

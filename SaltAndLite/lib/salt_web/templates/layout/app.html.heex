@@ -5,10 +5,10 @@
 
 </main>
 
-<div class="container" style="border-bottom: 1px solid #777777; 
+<div class="container" style="border-bottom: 1px solid #777777;
      margin-bottom: 2rem; padding-bottom: 1rem;">
   <%= if @current_user do %>
-    Logged in as <%= link @current_user.username,
+    Logged 1 in as <%= link @current_user.username,
                                to: Routes.user_path(@conn, :show, @current_user) %>
     |
     <%= link "Log out",        to: Routes.session_path(@conn, :delete), method: :delete %>
@@ -22,8 +22,8 @@
     <%= link "Students",       to: Routes.student_path(@conn, :index) %>
     |
     <%=# link "Students new",  to: Routes.student_path(@conn, :new) %>
-     <%=#link "Students edit",  to: Routes.student_path(@conn, :edit, 1), method: :edit %> 
-     <%=# link "Students show", to: Routes.student_path(@conn, :show, 1) %> 
+     <%=#link "Students edit",  to: Routes.student_path(@conn, :edit, 1), method: :edit %>
+     <%=# link "Students show", to: Routes.student_path(@conn, :show, 1) %>
   <% else %>
     <%= link "register",       to: Routes.user_path(@conn, :new) %>
     |

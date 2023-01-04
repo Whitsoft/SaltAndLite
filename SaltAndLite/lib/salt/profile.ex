@@ -4,18 +4,18 @@ defmodule Salt.Profile do
   # %Salt.Profile{} is an empty schema struct
 
   schema "profiles" do
-    field :title, :string
-    field :lastname, :string
-    field :firstname, :string
-    field :spousename, :string
-    field :streetaddress, :string
-    field :city, :string
-    field :state, :string
-    field :zipcode, :string
-    field :phoneone, :string
-    field :phonetwo, :string
+    field(:title, :string)
+    field(:lastname, :string)
+    field(:firstname, :string)
+    field(:spousename, :string)
+    field(:streetaddress, :string)
+    field(:city, :string)
+    field(:state, :string)
+    field(:zipcode, :string)
+    field(:phoneone, :string)
+    field(:phonetwo, :string)
 
-    belongs_to :user, Salt.User
+    belongs_to(:user, Salt.User)
     timestamps()
   end
 

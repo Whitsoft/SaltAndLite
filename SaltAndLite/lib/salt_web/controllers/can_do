@@ -1,0 +1,21 @@
+def can(role ="user") do
+  grant("user")        #%Authorization{
+                        #  role: "user"}
+  |> create(Student)
+  |> read(Student)
+end
+
+#for checking
+can("user")
+|> read?(Student)
+
+%Authorization{
+  role: "user",
+  create: %{
+    Student: true
+  },
+  read: %{          #can add other maps for edit, update, delete
+    Student: true
+  }
+
+}

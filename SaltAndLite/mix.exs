@@ -48,6 +48,7 @@ defmodule Salt.MixProject do
       {:jason, "~> 1.2"},
       {:plug, "~> 1.5"},
       {:plug_cowboy, "~> 2.5"},
+      {:gettext, "~> 0.18"},
       {:comeonin, "~> 5.3.3"},
       {:pbkdf2_elixir, "~> 2.0.0"}
     ]

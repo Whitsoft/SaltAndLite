@@ -1,4 +1,3 @@
-<% IO.puts(" edit student dot data in template") %>
-<h1>Edit <%= @firstname %>  <%= @lastname %></h1>
+<h1>Edit <%= @firstname %>  <%= @lastname %> </h1>
 <%= render("form.html", student: @student, action: Routes.student_path(@conn, :update, @student.data)) %>
  <! –– from Map.keys(assigns) ––>

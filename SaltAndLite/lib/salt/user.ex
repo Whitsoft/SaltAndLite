@@ -3,13 +3,14 @@ defmodule Salt.User do
   import Ecto.Changeset
 
   schema "users" do
-    field :username, :string
-    field :email_address, :string
-    field :password, :string, virtual: true
-    field :hashed_password, :string
-    field :current, :string
-    has_one :profiles, Salt.Profile
-    has_many :students, Salt.Student
+    field(:username, :string)
+    field(:email_address, :string)
+    field(:password, :string, virtual: true)
+    field(:hashed_password, :string)
+    field(:current, :string)
+    field(:roles, {:array, :string})
+    has_one(:profiles, Salt.Profile)
+    has_many(:students, Salt.Student)
     timestamps()
   end
 
@@ -17,6 +18,7 @@ defmodule Salt.User do
     user
     |> cast(data, [:username, :email_address])
     |> validate_required([:username, :email_address, :hashed_password])
+    |> validate_format(:email_address, ~r/@/)
     |> validate_length(:username, min: 3)
     |> unique_constraint(:username)
   end

@@ -1,7 +1,7 @@
 defmodule Salt.Class do
   use Ecto.Schema
   import Ecto.Changeset
-  alias Salt.{Registration, Classtitle}
+  # alias Salt.Registration
 
   schema "classes" do
     field(:location, :string)

@@ -35,11 +35,16 @@ defmodule Salt do
 
   def get_user(id) do
     # returns %Salt.User{User info}
+    # given a  user id such as 67
+    # return a user changeset
     @repo.get!(User, id)
     # |> preload(profiles: :firstname)
   end
 
-  def new_user, do: User.changeset_with_password(%User{})
+  # Get an empty changeset
+  def new_user do
+    User.changeset_with_password(%User{})
+  end
 
   def insert_user(params) do
     %User{}
@@ -49,6 +54,7 @@ defmodule Salt do
 
   def get_user_by_username_and_password(username, password) do
     # false
+
     with user when not is_nil(user) <- @repo.get_by(User, %{username: username}),
          true <- Password.verify_with_hash(password, user.hashed_password) do
       # true user will be changeset
@@ -75,11 +81,19 @@ defmodule Salt do
     # Repo.get!(Profile, id).lastname
   end
 
+  def update_user(%Salt.User{} = user, updates) do
+    user
+    |> Salt.User.changeset(updates)
+    |> @repo.update()
+  end
+
   #################################################################
   # Profile functions  - for profiles on Phoenix side of umbrella #
   #################################################################
-  def new_profile, do: Profile.changeset(%Profile{})
-  #   Profile.changeset(%Profile{})   # Return a blank changeset
+  def new_profile do
+    # Return a blank changeset
+    Profile.changeset(%Profile{})
+  end
 
   ##########################################################################
   # Alternately Salt.Profile |> struct() in place of %Profile{}         #
@@ -111,6 +125,15 @@ defmodule Salt do
     Repo.all(query)
     |> Enum.at(0)
     |> Map.get(:id)
+  end
+
+  # Given user id return the user lastname  # seems crude  - is there a better way?
+  def get_profile_lastname(userid) do
+    query = from(Profile, where: [user_id: ^userid], select: [:lastname])
+
+    Repo.all(query)
+    |> Enum.at(0)
+    |> Map.get(:lastname)
   end
 
   # Given a profile id return the user profile
@@ -150,9 +173,12 @@ defmodule Salt do
   end
 
   def update_profile(%Salt.Profile{} = profile, updates) do
+    IO.puts("UPDATEING PROFILE SALT")
+
     profile
     |> Salt.Profile.changeset(updates)
     |> @repo.update()
+    |> IO.inspect()
   end
 
   def edit_profile(id) do
@@ -172,8 +198,9 @@ defmodule Salt do
 
   def insert_student(params) do
     # Salt.Student
-    %Student{}
     # should return a change set with changes containing data
+
+    %Student{}
     |> Student.changeset(params)
     |> @repo.insert()
   end
@@ -212,6 +239,7 @@ defmodule Salt do
     #   user_id: 67
     # }
     # returns a changeset
+
     get_student(id)
     # pipe to Salt.Student.changeset() - if nothe chaged we get an emppty changeset
     # Ecto.Changeset<action: nil, changes: %{}, errors: [], data: #Salt.Student<>,
@@ -246,33 +274,15 @@ defmodule Salt do
     @repo.get_by(Student, attrs)
   end
 
-  # def insert_item(attrs) do
-  # Salt.Item
-  #  |> struct(attrs)
-  #  |> @repo.insert()
-  # end
-
-  # def delete_item(%Salt.Item{} = item), do: @repo.delete(item)
-
-  # def update_item(%Salt.Item{} = item, updates) do
-  #  item
-  #  |> Item.changeset(updates)
-  #  |> @repo.update()
-  # end
-
   def update_student(%Salt.Student{} = student, params) do
     # student is a changeset
     # params are a map of key, value pairs using string keys
     # convert the keys to atoms
     updates = Salt.key_to_atom(params)
-    # IO.puts("update_student")
-    # IO.inspect(updates)
 
     student
     |> Student.changeset(updates)
     |> @repo.update()
-
-    # |> IO.inspect()
   end
 
   def edit_student(id) do
@@ -385,7 +395,7 @@ defmodule Salt do
 
   # Given semester return a list of registrations classes
   # Get all students for one user - alternate method
-  def get_registration_semester(semester) do
+  def get_registration_semester(_semester) do
     query = from(Registration)
     # brings back list of structs
     Repo.all(query)
@@ -456,8 +466,8 @@ defmodule Salt do
 
   def get_fee(semester, fallfee, springfee) do
     cond do
-      semester = 1 -> fallfee
-      semester = 2 -> springfee
+      ^semester = 1 -> fallfee
+      ^semester = 2 -> springfee
     end
 
     "fee unknown"
@@ -557,7 +567,9 @@ defmodule Salt do
     # end
   end
 
+  # returns a nested map - including period, section, class title - profiles for teachers
   def list_class_data(id, classid, semester) do
+    # nested map
     regdata = Salt.get_class_from_classid(classid)
     classtitle = regdata.classtitle.description
     fallfee = regdata.fallfee

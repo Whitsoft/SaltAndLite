@@ -1,0 +1,192 @@
+<!-- http://localhost:4000/students/29/registrations-->
+<!-- Just a table and a drop down list - no form used -->
+
+<html>
+
+  <head>
+    <!-- Available assigns: [:conn, :registrations, :class_params, :titlelist :student_id, :firstname, :lastname, :classes] -->
+    <p>
+      <strong><%= @firstname %> <%= @lastname %></strong>
+    <!--crsf token is usually provided by a form - however there is no form - add our own -->
+    <%= csrf_meta_tag() %>
+  </head>
+
+<style type="text/css">
+ table {
+   border-collapse: collapse;
+ }
+table, th, td {
+  border: 2px solid black;
+}
+th, td {
+  padding: 6px;
+}
+</style
+
+<body>
+
+<script>
+   let studentID  = <%=@student_id %>
+   localStorage.setItem("studentID", studentID);
+   const regid  = localStorage.getItem("regIndex");
+   alert(getCurrentURL());
+</script>
+
+<script>
+  function getCurrentURL() {
+    localStorage.setItem("regIndex",window.location.href );
+    alert(window.location.href);
+  }
+</script
+
+<!--make a drop down list of titles -->
+<!--purpose is to display all class titles -->
+<label for="title">To add a class: select a class title from the list:</label>
+<p></p>
+  <select id="classtitles-select">
+    <option value="<%= 0 %>"><%= "" %></option>
+    <%= for classtitle <- @titlelist do %>
+        <option value="<%= Enum.at(classtitle,0) %>"><%= Enum.at(classtitle,1) %></option>
+    <% end %>
+    getCurrentURL();
+  </select>
+
+  <!-- Create drop down list of available classes -->
+  <script>
+    const classtitlesSelect = document.getElementById("classtitles-select");
+    localStorage.setItem("regIndex",window.location.href );
+    <!-- switch to select template  -->
+    classtitlesSelect.addEventListener("change", (event) => {
+      window.location.href = "/selectclasses/" + event.target.value;
+    })
+  </script>
+
+</ul>
+<!--  table and a drop down list - no form used -->
+ <table  style="width:150%" id="classTable" class="table-layout" >
+    <tr  onclick="(this)">
+      <th>RegID</th>
+      <th>ClassID </th>
+      <th>Class title</th>
+      <th>Section</th>
+      <th>Period</th>
+      <th>Fee</th>
+      <th>Semester</th>
+      <th>Teacher1</th>
+      <th>Teacher2</th>
+      <th>Teacher3</th>
+    </tr>
+     <%= for {class, _i} <- Enum.with_index(@classes,0) do%>
+      <%= for {item, _k} <- Enum.with_index(class,0) do%>
+        <td> <%= item %> </td>
+      <% end %>
+      </tr>
+    <% end %>
+  </table>
+<input id =  "cancelbtn" type = "button" onclick = "hideCancel()"  value = "Cancel">
+<input id =  "deletebtn" type = "button" onclick = "hideDelete()"  value = "Delete Yellow">
+
+<script>
+   document.getElementById("cancelbtn").style.visibility = 'hidden';
+   document.getElementById("deletebtn").style.visibility = 'hidden';
+</script>
+
+
+
+<script>
+  var hideCancel = function(){
+    document.getElementById("cancelbtn").style.visibility = 'hidden';
+    document.getElementById("deletebtn").style.visibility = 'hidden';
+    blankRowColor();
+  };
+</script>
+
+
+<script>
+  var hideDelete = function(){  //delete a class registration from this student
+    let regPath = window.location.pathname;
+    const studentid = localStorage.getItem("studentID");
+    const classid   = localStorage.getItem("classID");
+    const semesterid   = localStorage.getItem("semester");
+    const registrationid   = localStorage.getItem("regID").toString();
+    const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    let regurl = "http://localhost:4000/students/"+ studentid +"/registrations/"+ registrationid +"/";
+  fetch(regurl, {
+  method: 'DELETE',
+      headers: { //start headers
+        "content-type": "application/json",
+         'x-csrf-token': token,
+      },  // end headers
+})  // end fetch function
+.then(res => res.text())
+ // or res.json()
+.then(res => console.log(res))
+  hideCancel();
+  location.reload();
+  };
+</script>
+
+
+<script>
+highlight_row();
+function highlight_row() {
+    var table = document.getElementById('classTable');
+    var cells = table.getElementsByTagName('td');
+    for (var i = 0; i < cells.length; i++) {
+        // Take each cell
+        var cell = cells[i];
+        // do something on onclick event for cell
+        cell.onclick = function () {
+           // Get the row id where the cell exists
+            var rowId = this.parentNode.rowIndex;
+            var rowsNotSelected = table.getElementsByTagName('tr');
+            for (var row = 0; row < rowsNotSelected.length; row++) {
+                rowsNotSelected[row].style.backgroundColor = "";
+                rowsNotSelected[row].classList.remove('selected');
+            }
+            var rowSelected = table.getElementsByTagName('tr')[rowId];
+            rowSelected.style.backgroundColor = "yellow";
+            const regid  = localStorage.getItem("regIndex");
+           //http://localhost:4000/students/29/registrations
+            rowSelected.className += " selected";
+            // studentID , classID, semester - also identify a unique registration
+            // trick to get an assigns into a javascript variable
+            let studentID  = <%=@student_id %>
+            let regID      = rowSelected.cells[0].innerHTML.trim();  //unique registration
+            let classID    = rowSelected.cells[1].innerHTML;
+            let semester   = rowSelected.cells[6].innerHTML;
+            localStorage.setItem("regID", regID);
+            //localStorage.setItem("studentID", studentID);
+            localStorage.setItem("classID", classID);
+            localStorage.setItem("semester", semester[1]);
+            document.getElementById("cancelbtn").style.visibility = 'visible';
+            document.getElementById("deletebtn").style.visibility = 'visible';
+         }
+    }
+}
+</script>
+
+<script>
+  var blankRowColor = function(){
+    var table = document.getElementById('classTable');
+    var cells = table.getElementsByTagName('td');
+    for (var i = 0; i < cells.length; i++) {
+         var cell = cells[i];
+            var rowId = table.rowIndex;
+            var rowsNotSelected = table.getElementsByTagName('tr');
+            for (var row = 0; row < rowsNotSelected.length; row++) {
+                rowsNotSelected[row].style.backgroundColor = "";
+                rowsNotSelected[row].classList.remove('selected');
+            }
+    }
+}
+</script>
+
+<span><% link "Back", to: Routes.student_path(@conn, :index) %></span>
+<span><%=# link "New Registration", to: Routes.student_registration_path(@conn, :new, @student_id) %></span>
+<span><%=# link "New Registration", to: Routes.student_registration_path(@conn, :new) %></span>
+
+
+
+</body>
+</html>

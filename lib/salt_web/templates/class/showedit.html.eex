@@ -1,0 +1,1 @@
+<%= render("showform.html", conn: @conn, changeset: @changeset, classlist: @classlist, title: @title, action: @action) %>

@@ -1,0 +1,13 @@
+<div class="form-group">
+    <%= form_for @current_user ,@action, fn f -> %>
+    <%= input f, :username %>
+    <%= input f, :email_address %>
+    <%= password_input f, :password %>
+    <%= password_input f, :password_confirmation %>
+
+    <div>
+      <%= submit "Submit" %>
+    </div>
+
+  </div>
+<% end %>

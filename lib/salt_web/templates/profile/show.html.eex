@@ -1,0 +1,57 @@
+<h1>Profile for  <%= @profile.data.firstname %> <%= @profile.data.lastname %></h1>
+
+<span><%= link "Back", to:  Routes.user_path(@conn, :show, :userid) %></span>
+ <! –– assigns - [:conn, :current_user, :profile] ––>
+ <! –– from Map.keys(assigns) ––>
+
+ <%= form_for @profile, Routes.profile_path(@conn, :show), fn f -> %>
+  <%= label f,      :title %>
+  <%= error_tag f,  :title %>
+  <%= text_input f, :title %>
+
+  <%= label f,      :lastname %>
+
+
+
+  <%= error_tag f,  :lastname %>
+  <%= text_input f, :lastname %>
+
+  <%= label f,      :firstname %>
+  <%= error_tag f,  :firstname  %>
+  <%= text_input f, :firstname  %>
+
+  <%= label f,      :spousename  %>
+  <%= error_tag f,  :spousename %>
+  <%= text_input f, :spousename %>
+
+  <%= label f,      :streetaddress %>
+  <%= error_tag f,  :streetaddress %>
+  <%= text_input f, :streetaddress %>
+
+  <%= label f,      :city %>
+  <%= error_tag f,  :city %>
+  <%= text_input f, :city %>
+
+  <%= label f,      :state %>
+  <%= error_tag f,  :state %>
+  <%= text_input f, :state %>
+
+  <%= label f,      :zipcode %>
+  <%= error_tag f,  :zipcode %>
+  <%= text_input f, :zipcode %>
+
+  <%= label f,      :phoneone %>
+  <%= error_tag f,  :phoneone %>
+  <%= text_input f, :phoneone %>
+
+  <%= label f,      :phonetwo %>
+  <%= error_tag f,  :phonetwo %>
+  <%= text_input f, :phonetwo %>
+
+  <div>
+   <%#= if !@action do %>
+    <%=# submit "Submit" %>
+    <%#end %>
+  </div>
+
+<% end %>

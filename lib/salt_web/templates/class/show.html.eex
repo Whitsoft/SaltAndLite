@@ -1,0 +1,169 @@
+<%# require IEx; IEx.pry() %>
+<%# assigns ClassTitle.description - plus classes - a list of class info (map) %>
+<!--Available assigns: [:class, :classes, :conn, :id, :title] -->
+<html>
+<head>
+<!--crsf token is usually provided by a form - however there is no form - add our own -->
+<%= csrf_meta_tag() %>
+</head>
+<body>
+<p id="output"></p>
+
+<style>
+.table-layout {
+    text-align: center;
+    border: 2px solid black;
+    border-collapse: collapse;
+    font-family:"Trebuchet MS";
+    margin: 0 auto 0;
+}
+.table-layout td, .table-layout th {
+    border: 1px solid black;
+    padding: 5px 5px 0;
+}
+.table-layout td {
+    text-align: left;
+}
+.selected {
+    color: red;
+}
+    border: px solid black;
+    padding: 5px 5px 0;
+}
+.table-layout td {
+    text-align: left;
+}
+.selected {
+    color: blue;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td {
+  height: 40px;
+}
+.cancelButton {
+  position:fixed;
+  top: 25px;
+  left: 200px;
+  border: none;
+  color: white;
+  width: 110px;
+  height: 40x;
+  padding: 0px 0px;
+  text-align: center;
+  font-size: 14px;
+
+  cursor: pointer;
+}
+
+.selectButton {
+  position:fixed;
+  top: 25px;
+  left: 340px;
+  border: none;
+  color: white;
+  width: 110px;
+  height: 40x;
+  padding: 0px 0px;
+  text-align: center;
+  font-size: 14px;
+
+  cursor: pointer;
+}
+div.relative {
+  position: relative;
+  left: 545px;
+}
+
+</style>
+
+<div class="relative">
+<h3> Show Class</h3>
+</div>
+
+<input class = "cancelButton" type = "button" onclick = "cancelFunction()" id = "cancel" value = "Cancel">
+<input class = "selectButton" type = "button" onclick = "redirectFunction()" id = "select" value = "Select">
+
+<table  id="classTable" class="table-layout" style="width:80%">
+    <colgroup>
+      <col span="1" style="width: 1%;">
+      <col span="1" style="width: 1%;">
+      <col span="1" style="width: 1%;">
+      <col span="1" style="width: 1%;">
+    </colgroup>
+    <tr>
+      <th>ID</th>
+      <th>Class title</th>
+      <th>Section</th>
+      <th>Period</th>
+    </tr>
+
+  <%= for class <- @classes do%>
+ <tr  onclick="highlight_row(this)" data-class-id="<%= class.id %>">
+  <td><%= class.id %></td>
+  <td><%= class.classtitle.description %></td>
+  <td><%= class.section.description %></td>
+  <td><%= class.period.time %></td>
+ </tr>
+  <% end %>
+
+<script>
+highlight_row();
+
+function highlight_row(x) {
+
+    var table = document.getElementById('classTable');
+    var len = table.rows.length;
+    var rowID =x.rowIndex;
+    for (var i = 1; i < len; i++) {
+      table.getElementsByTagName('tr')[1].style.backgroundColor = "";
+     }
+    var rowsNotSelected = table.getElementsByTagName('tr');
+      for (var row = 0; row < rowsNotSelected.length; row++) {
+        rowsNotSelected[row].style.backgroundColor = "";
+        rowsNotSelected[row].classList.remove('selected');
+      }
+    var rowSelected = table.getElementsByTagName('tr')[rowID];
+    rowSelected.style.backgroundColor = "yellow";
+    rowSelected.className += " selected";
+    const classid = rowSelected.cells[0].innerHTML.trim();  //unique class title
+    const titleID = rowSelected.cells[1].innerHTML;
+    const Section = rowSelected.cells[2].innerHTML;
+    const Period  = rowSelected.cells[3].innerHTML;
+
+    localStorage.setItem("classid", classid);
+    localStorage.setItem("titleID", titleID);
+    localStorage.setItem("section", titleID);
+    localStorage.setItem("period", titleID);
+  }
+</script>
+
+<script>
+  function cancelFunction() {
+       const id  = localStorage.getItem("classIndex");
+       window.location.replace(id);
+}
+
+</script>
+
+<script>
+  function redirectFunction() {
+    hostname = window.location.hostname;
+    pathname = window.location.pathname;
+    let port = location.port;
+    let path =hostname+":"+port+"/class/"
+    let id =  localStorage.getItem("classid");
+    url = path.concat(id);
+    surl = "http://" + url.toString();
+    alert(surl);
+    window.location.assign(surl);
+}
+
+</script>
+
+
+</body>
+</html>

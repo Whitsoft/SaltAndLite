@@ -1,0 +1,170 @@
+
+<!-- http://localhost:4000/students/29/registrations-->
+<!-- Use a table and a drop down list - input to a hidden form -->
+
+<html>
+<!-- Available assigns: [:conn, :changeset, :classtitle, :classdata] -->
+<p>
+<h3>  <strong>Click on a row to select a <%= @classtitle %> class </strong> </h3>
+
+<!--crsf token is usually provided by a form - however there is no form - add our own -->
+<%=# csrf_meta_tag() %>
+
+<head>
+
+<style type="text/css">
+ table {
+   border-collapse: collapse;
+ }
+table, th, td {
+  border: 2px solid black;
+}
+th, td {
+  padding: 6px;
+}
+</style>
+</head>
+
+<body onload="initFunction()">
+
+
+<input type = "button" onclick = "selectFunction()" id = "regSelect" value = "Select">
+<input type = "button" onclick = "cancelFunction()" id = "regCancel" value = "Go Back">
+</ul>
+<!--  table and a drop down list - no form used -->
+ <table  style="width:150%" id="classTable" class="table-layout" >
+    <tr  onclick="(this)">
+      <th>ClassID </th>
+      <th>Class title</th>
+      <th>Section</th>
+      <th>Period</th>
+      <th>Fee</th>
+      <th>Semester</th>
+      <th>Teacher1</th>
+      <th>Teacher2</th>
+      <th>Teacher3</th>
+    </tr>
+     <%= for {class, _i} <- Enum.with_index(@classdata,0) do%>
+      <%= for {item, _k} <- Enum.with_index(class,0) do%>
+        <td> <%= item %> </td>
+      <% end %>
+      </tr>
+    <% end %>
+  </table>
+
+<input id =  "cancelbtn" type = "button" onclick = "disableSubmitFunction()" value = "Cancel">
+
+<script>
+  function selectFunction() {
+    const regid  = localStorage.getItem("classIndex");
+    window.location.replace(regid);
+}
+</script>
+
+<script>
+  function cancelFunction() {
+    const regid  = localStorage.getItem("classIndex");
+    window.location.replace(regid);
+}
+</script>
+
+<div id = "hide_form" >
+<%= form_for @changeset, @action, fn f -> %>
+
+  <%= if @changeset.action do %>
+    <div class="alert alert-danger">
+      <p>Oops, something went wrong! Please check the errors below.</p>
+    </div>
+  <% end %>
+
+  <%= hidden_input f, :student_id, name: "student_id", value: "form_control"%>
+  <%= hidden_input f, :class_id,   name: "class_id", value: "form_control" %>
+  <%= hidden_input f, :semester,   name: "semester", value: "form_control" %>
+  <%=  submit "Save"  %>
+<% end %>
+</div>
+<script>
+highlight_row();
+function highlight_row() {
+    //http://localhost:4000/students/29/registrations
+    const regid  = localStorage.getItem("regIndex");
+    var table = document.getElementById('classTable');
+    var cells = table.getElementsByTagName('td');
+    for (var i = 0; i < cells.length; i++) {
+        // Take each cell
+        var cell = cells[i];
+        // do something on onclick event for cell
+        cell.onclick = function () {
+           // Get the row id where the cell exists
+            var rowId = this.parentNode.rowIndex;
+            var rowsNotSelected = table.getElementsByTagName('tr');
+            for (var row = 0; row < rowsNotSelected.length; row++) {
+                rowsNotSelected[row].style.backgroundColor = "";
+                rowsNotSelected[row].classList.remove('selected');
+            }
+            var rowSelected = table.getElementsByTagName('tr')[rowId];
+            rowSelected.style.backgroundColor = "yellow";
+            rowSelected.className += " selected";
+            enableSubmitFunction();
+            const classID    = rowSelected.cells[0].innerHTML;
+            const semesterVal   = rowSelected.cells[5].innerHTML;
+            const studentID  = localStorage.getItem("studentID");
+            //enableSubmitFunction()
+             const item1 = document.getElementById("registration_student_id");
+             item1.value = studentID*1;
+
+             const item2 = document.getElementById("registration_class_id");
+             item2.value = classID*1;
+
+             const item3 = document.getElementById("registration_semester");
+             item3.value = semesterVal.split(" ").join("")*1;
+         }
+    }
+}
+</script>
+
+<script>
+var unHighlightRows = function(){
+    var table = document.getElementById('classTable');
+    var cells = table.getElementsByTagName('td');
+    for (var i = 0; i < cells.length; i++) {
+         var cell = cells[i];
+            var rowId = table.rowIndex;
+            var rowsNotSelected = table.getElementsByTagName('tr');
+            for (var row = 0; row < rowsNotSelected.length; row++) {
+                rowsNotSelected[row].style.backgroundColor = "";
+                rowsNotSelected[row].classList.remove('selected');
+            }
+    }
+}
+</script>
+
+<script>
+function initFunction() {
+
+ disableSubmitFunction();
+}
+</script>
+
+<script>
+  function enableSubmitFunction() {
+  // document.getElementById("submitbtn").style.display = "block";
+   document.getElementById("cancelbtn").style.display = "block";
+  }
+</script>
+
+<script>
+  function disableSubmitFunction() {
+
+  // document.getElementById("submitbtn").style.display = "none";
+   document.getElementById("cancelbtn").style.display = "none";
+   unHighlightRows();
+  }
+</script>
+
+
+<span><%# link "Back", to: Routes.student_path(@conn, :index) %></span>
+<span><%=# link "New Registration", to: Routes.student_registration_path(@conn, :new, @student_id) %></span>
+<span><%=# link "New Registration", to: Routes.student_registration_path(@conn, :new) %></span>
+</body>
+</html>

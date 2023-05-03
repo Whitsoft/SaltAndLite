@@ -1,0 +1,2 @@
+<h1>Delete Student <%= @firstname  %> <%= @lastname  %> </h1>
+<%= render("form.html", student: @student, current_user: @current_user, submitter: @submitter,action: Routes.student_path(@conn, :show, @student_id), conn: @conn) %>

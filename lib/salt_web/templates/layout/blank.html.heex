@@ -1,0 +1,15 @@
+<main class="container">
+  <p class="alert alert-info" role="alert"><%= Phoenix.Flash.get(@flash, :info) %></p>
+  <p class="alert alert-danger" role="alert"><%= Phoenix.Flash.get(@flash, :error) %></p>
+  <%= @inner_content %>
+
+
+</main>
+
+<div class="container" style="border-bottom: 1px solid #FFFFFF;
+     margin-bottom: 2rem; padding- bottom: 1rem;">
+  <%= if !@current_user do %>
+    <%= link "register",      to: Routes.user_path(@conn, :new) %>
+    |
+    <%= link "login",         to: Routes.session_path(@conn, :new) %>
+  <% end %></div>

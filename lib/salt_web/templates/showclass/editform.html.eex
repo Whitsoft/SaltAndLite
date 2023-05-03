@@ -1,0 +1,172 @@
+<%# require IEx; IEx.pry() %>
+<%# assigns ClassTitle.description - plus classes - a list of class info (map) %>
+<!--Available assigns: [:classes, :conn, :current_user, :id, :title] -->
+<html>
+<head>
+<%= IO.puts("SHOW EDIT SHOW EDIT") %>
+<!--crsf token is usually provided by a form - however there is no form - add our own -->
+<%= csrf_meta_tag() %>
+</head>
+<body>
+<p id="output"></p>
+<style>
+.table-layout {
+    text-align: center;
+    border: 1px solid black;
+    border-collapse: collapse;
+    font-family:"Trebuchet MS";
+    margin: 0 auto 0;
+}
+.table-layout td, .table-layout th {
+    border: 1px solid black;
+    padding: 5px 5px 0;
+}
+.table-layout td {
+    text-align: left;
+}
+.selected {
+    color: red;
+}
+    border: px solid black;
+    padding: 5px 5px 0;
+}
+.table-layout td {
+    text-align: left;
+}
+.selected {
+    color: blue;
+}
+table {
+  border-collapse: collapse;
+  width: 120%;
+}
+
+td {
+  height: 40px;
+}
+</style>
+<h2> Select a class to edit </h1>
+<input type = "button" onclick = "cancelFunction()" id = "junk" value = "Cancel">
+<input type = "button" onclick = "editFunction()" id = "junk1" value = "Edit">
+
+<table id="classTable" class="table-layout">
+    <tr  onclick="(this)">
+      <th>ID</th>
+      <th>Class title</th>
+      <th>Section</th>
+      <th>Period</th>
+      <th>Fee</th>
+      <th>Semester</th>
+      <th>Teacher1</th>
+      <th>Teacher2</th>
+
+      <th>Teacher3</th>
+    </tr>
+ <tr data-class-id="<%= @id %>">
+  <td><%= @id %></td>
+  <td><%= @classtitle%></td>
+  <td><%= @section %></td>
+  <td><%= @period %></td>
+  <td><%= @fee %></td>
+  <td><%= @semester %></td>
+  <td><%= @teacher1 %></td>
+  <td><%= @teacher2 %></td>
+  <td><%= @teacher3 %></td>
+ </tr>
+
+
+
+<script>
+  function cancelFunction() {
+       //const titleEx  = localStorage.getItem("titleIndex");
+      // window.location.replace(titleEx);
+}
+</script>
+
+<script>
+
+highlight_row();
+
+function highlight_row() {
+    var table = document.getElementById('classTable');
+    var cells = table.getElementsByTagName('td');
+    for (var i = 0; i < cells.length; i++) {
+        // Take each cell
+        var cell = cells[i];
+        // do something on onclick event for cell
+        cell.onclick = function () {
+            // Get the row id where the cell exists
+            var rowId = this.parentNode.rowIndex;
+            var rowsNotSelected = table.getElementsByTagName('tr');
+            for (var row = 0; row < rowsNotSelected.length; row++) {
+                rowsNotSelected[row].style.backgroundColor = "";
+                rowsNotSelected[row].classList.remove('selected');
+            }
+            var rowSelected = table.getElementsByTagName('tr')[rowId];
+            rowSelected.style.backgroundColor = "yellow";
+            rowSelected.className += " selected";
+
+            const studentid  = localStorage.getItem("studentID");
+            const classid = rowSelected.dataset.classId;
+            const semester = rowSelected.cells[4].innerText;
+            //studentid =  window["studentID"];
+
+            document.getElementById('studentid').setAttribute('value', studentid);
+            document.getElementById('classid').setAttribute('value', classid);
+            document.getElementById('semester').setAttribute('value', semester);
+            document.getElementById('formclassid').setAttribute('value', classid);
+
+
+            enableSelect(); //enable the select button if inputs are valid
+         }
+    }
+}
+</script>
+
+
+<script>
+  function editFunction() {
+    hostname = window.location.hostname;
+    pathname = window.location.pathname;
+    let port = location.port;
+    let path =hostname+":"+port+"/class/"
+    let id =  localStorage.getItem("classid");
+    url = path.concat(id).concat("/edit");
+    surl = "http://" + url.toString();
+    window.location.assign(surl);
+}
+
+</script>
+</script>
+
+<script>
+function disableFunction() {
+  document.getElementById("selectbtn").disabled = false;
+  }
+</script>
+
+<script>
+  function cancelFunction() {
+       const classex  = localStorage.getItem("classIndex");
+       window.location.replace(classex);
+}
+</script>
+
+<script>
+    function enableSelect(){
+      let inputs = document.getElementsByClassName('required');
+      let btn = document.getElementById("selectbtn");
+      let isValid = true;
+      for (var i = 0; i < inputs.length; i++){
+        let changedInput = inputs[i];
+        if (changedInput.value.trim() === "" || changedInput.value === null){
+          isValid = false;
+          break;
+      } //end if
+    }//end for
+    document.getElementById("selectbtn").removeAttribute("disabled");
+  }
+</script>
+
+</body>
+</html>

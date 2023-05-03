@@ -1,0 +1,8 @@
+<ul>
+  <h1> Here we are in classtitles </h1>
+  <%= @classtitles %>
+
+  <%= for classtitle <- @classtitles do %>
+    <li><strong><%= classtitle.firstname %></li>
+  <% end %>
+</ul>

@@ -1,0 +1,2 @@
+<h1>New Student for  <%= @lastname  %> </h1>
+<%= render("newform.html", conn: @conn, student: @student, current_user: @current_user, action: Routes.student_path(@conn, :create)) %>

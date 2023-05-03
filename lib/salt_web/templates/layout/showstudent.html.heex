@@ -1,0 +1,29 @@
+<main class="container">
+  <p class="alert alert-info" role="alert"><%= Phoenix.Flash.get(@flash, :info) %></p>
+  <p class="alert alert-danger" role="alert"><%= Phoenix.Flash.get(@flash, :error) %></p>
+  <%= @inner_content %>
+
+</main>
+<div class="container" style="border-bottom: 1px solid #777777;
+     margin-bottom: 2rem; padding-bottom: 1rem;">
+  <%= if @current_user do %>
+
+    Logged in as <%= link @current_user.username,
+                                      to: Routes.user_path(@conn, :show, @current_user) %>
+    |
+    <%= link "Register classes",      to: Routes.student_registration_path(@conn, :index, @student_id) %>
+
+    <%=# link "New student",           to: Routes.student_path(@conn, :new) %>
+    |
+    <%= link "Edit student",          to: Routes.student_path(@conn, :edit,  @student_id),
+                                      method: :delete, data: [confirm: "Are you sure?"] %>
+    |
+    <%= link "Delete student",        to: Routes.student_path(@conn, :delete, @student_id),
+                                        method: :delete, data: [confirm: "Are you sure?"] %>
+    |
+  <% else %>
+    <%= link "register user",         to: Routes.user_path(@conn, :new) %>
+    |
+    <%= link "login",                 to: Routes.session_path(@conn, :new) %>
+  <% end %>
+</div>

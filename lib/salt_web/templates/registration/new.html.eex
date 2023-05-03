@@ -1,0 +1,5 @@
+<%= render("classform.html",  class: @class, titles: @titles,  sections: @sections, periods: @periods, teachers: @teachers, submitter: @submitter,
+action: Routes.class_path(@conn, :create), conn: @conn) %>
+
+ <! –– assigns - [:conn,  :class, :classtitles, :sections, :periods, :teachers, :submitter ––>
+ <! –– from Map.keys(assigns) ––>

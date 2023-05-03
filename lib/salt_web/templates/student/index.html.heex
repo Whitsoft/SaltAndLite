@@ -1,0 +1,10 @@
+<span><%= link "Back", to:  Routes.user_path(@conn, :show, :userid) %></span>
+
+<ul>
+    <%= for student <- @students do %>
+          <strong><%= link("select", to: Routes.student_path(@conn, :show, student.data)) %></strong>
+          <strong><%= student.data.firstname %></strong>
+          <strong><%= @lastname %></strong>
+          <br>
+  <% end %>
+</ul>

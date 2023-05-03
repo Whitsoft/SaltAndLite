@@ -1,0 +1,2 @@
+<h1>Edit -  <%= @student.data.firstname %>  <%= @lastname  %> </h1>
+<%= render("editform.html", conn: @conn, student: @student, current_user: @current_user, action: Routes.student_path(@conn, :update, @student_id)) %>

@@ -1,0 +1,36 @@
+<%= form_for @student, @action, fn f -> %>
+<span><%= link "Back", to: Routes.student_path(@conn, :index) %></span>
+|
+<span><%= link "Delete", to: Routes.student_path(@conn, :delete, @student.data.id),
+          method: :delete,
+          data: [confirm: "Are you sure?"] %></span>
+|
+  <%= if @student.action do %>
+    <div class="alert alert-danger">
+      There are errors in your submission.
+      Please correct them below.
+    </div>
+  <% end %>
+
+  <%=#  @action %>
+
+  <%= label f,      "First Name" %>
+  <%= error_tag f,  :firstname  %>
+  <%= text_input f, :firstname  %>
+
+  <%= label f,      "Grade"  %>
+  <%= error_tag f,  :grade %>
+  <%= text_input f, :grade %>
+
+  <%= label f,      "Birthday" %>
+  <%= error_tag f,  :birthday %>
+  <%= date_input f, :birthday %>
+
+
+  <div>
+    <%=# if @submitter do  %>
+      <%# submit "Submit" %>
+    <%#end %>
+  </div>
+<% end %>
+>

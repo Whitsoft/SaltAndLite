@@ -1,0 +1,15 @@
+
+<div class="form-group">
+<button onclick="document.location='default.asp'">HTML Tutorial</button>
+<span><%= link "Back", to: Routes.classtitle_path(@conn, :index) %></span>
+    <%= form_for @classtitle ,@action, fn f -> %>
+
+    <%= text_input f, :id  %>
+    <%= text_input f, :description  %>
+    <%= textarea   f, :syllabus %>
+ <div>
+  <%= if @submitter do  %>
+    <%= submit "Submit" %>
+  <%end %>
+</div>
+<% end %>

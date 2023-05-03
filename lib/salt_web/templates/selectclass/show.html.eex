@@ -1,0 +1,2 @@
+<%= render "form.html", id: @id, changeset: @changeset, classes: @classes,
+ classtitle: @classtitle, action: Routes.selectclass_path(@conn, :create)%>

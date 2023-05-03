@@ -1,0 +1,43 @@
+    <!--crsf token is usually provided by a form - however there is no form - add our own -->
+    <%= csrf_meta_tag() %>
+<span><%= link "Back", to:  Routes.user_path(@conn, :show, :userid) %></span>
+
+<div class="form-group">
+    <%= form_for @profile ,@action, fn f -> %>
+    <%= label f,      :title %>
+    <%= text_input f, :title %>
+
+    <%= label f,      :lastname %>
+    <%= text_input f, :lastname %>
+
+    <%= label f,      :firstname %>
+    <%= text_input f, :firstname  %>
+
+    <%= label f,      :spousename  %>
+    <%= text_input f, :spousename %>
+
+    <%= label f,      :streetaddress %>
+    <%= text_input f, :streetaddress %>
+
+    <%= label f,      :city %>
+    <%= text_input f, :city %>
+
+    <%= label f,      :state %>
+    <%= text_input f, :state %>
+
+    <%= label f,      :zipcode %>
+    <%= text_input f, :zipcode %>
+
+    <%= label f,      :phoneone %>
+    <%= text_input f, :phoneone %>
+
+    <%= label f,      :phonetwo %>
+    <%= text_input f, :phonetwo %>
+
+<div>
+  <%= if @submitter do  %>
+    <%= submit "Submit" %>
+  <%end %>
+</div>
+
+<% end %>

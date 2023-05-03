@@ -1,0 +1,16 @@
+<h1>Log In</h1>
+<%# This version of form_for accepts (conn) %>
+<%# a connection instead of a changeset.    %>
+<%# as: :user will namespace the fields under %>
+<%# “user” when it’s POSTed to the server.  %>
+<%= form_for @conn, Routes.session_path(@conn, :create), [as: :user], fn f -> %>
+
+  <%= label f, :username %>
+  <%= text_input f, :username %>
+
+  <%= label f, :password %>
+  <%= password_input f, :password %>
+    <div>
+      <%= submit "Submit" %>
+    </div>
+<% end %>

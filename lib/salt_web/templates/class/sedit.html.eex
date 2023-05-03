@@ -1,0 +1,4 @@
+<h3>Edit class </h3>
+<%= IO.puts("EDIT CLASS EDIT SEDIT") %>
+<%= render("classform.html",  classtitles: @classtitles,  sections: @sections, periods: @periods, teachers: @teachers, submitter: @submitter,
+action: Routes.class_path(@conn, :singleclass), conn: @conn) %>

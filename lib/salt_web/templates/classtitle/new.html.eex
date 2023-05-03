@@ -1,0 +1,4 @@
+<h1>New class title</h1>
+<%= render("form.html", classtitle: @classtitle,  current_user: @current_user,submitter: @submitter, action: @action, conn: @conn) %>
+ <! –– assigns - [:conn, :current_user, :classtitle] ––>
+ <! –– from Map.keys(assigns) ––>

@@ -1,0 +1,151 @@
+<!-- Available assigns: [:conn, :classtitles, :sections, :periods, :teachers, :submitter] -->
+<%= IO.puts("INDEX INDEX CLASS TEMPLATE") %>
+<html>
+  <head>
+    <!--crsf token is usually provided by a form - however there is no form - add our own -->
+    <%= csrf_meta_tag() %>
+  </head>
+
+<body>
+
+<style>
+
+.table-layout {
+    text-align: center;
+    border: 1px solid black;
+    padding: 5px 5px 0;
+}
+.table-layout td {
+    text-align: left;
+}
+.selected {
+    color: red;
+}
+    border: px solid black;
+    padding: 5px 5px 0;
+}i
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td {
+  height: 40px;
+}
+</style>
+<h2> Choose from class titles </h2>
+<input id =  "selectBtn" type = "button" onclick = "selectTitle()"  value = "Select">
+  <table id="titleTable" class="table-layout" style="width:60%">
+    <tr  onclick="highlight_row()">
+      <th>Class title </th>
+    </tr>
+
+  <%= for classtitle <- @classtitles do %>
+   <td style="display:none;"><%=Enum.at(classtitle,0)%></td>
+   <td><%= Enum.at(classtitle,1) %></td>
+   <td style="display:none;">><%= Enum.at(classtitle,2) %></td>
+    <td class="text-right">
+      <%=# link "Show", to: Routes.classtitle_path(@conn, :show, classtitle), class: "btn btn-default btn-xs" %>
+      <%=# link "Edit", to: Routes.classtitle_path(@conn, :edit, classtitle), class: "btn btn-default btn-xs" %>
+      <%=# link "Delete", to: Routes.classtitle_path(@conn, :delete, classtitle), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %>
+    </td>
+
+ </tr>
+  <% end %>
+
+  <script>
+     function getCurrentURL (){
+      localStorage.setItem("classIndex",window.location.href );
+    }
+  </script>
+
+<script>
+highlight_row();
+
+function highlight_row(x) {
+    //getCurrentURL();
+    let btn = document.getElementById("selectBtn");
+    //btn.disabled = true;
+    var table = document.getElementById('titleTable');
+    var cells = table.getElementsByTagName('td');
+    for (var i = 0; i < cells.length; i++) {
+        // Take each cell
+        var cell = cells[i];
+        // do something on onclick event for cell
+        cell.onclick = function () {
+           // Get the row id where the cell exists
+            let rowId = this.parentNode.rowIndex;
+            var rowsNotSelected = table.getElementsByTagName('tr');
+            for (var row = 0; row < rowsNotSelected.length; row++) {
+                rowsNotSelected[row].style.backgroundColor = "";
+                rowsNotSelected[row].classList.remove('selected');
+            }
+            var rowSelected = table.getElementsByTagName('tr')[rowId];
+            let row_id = this.parentNode.rowIndex;
+            rowSelected.style.backgroundColor = "yellow";
+            //rowSelected.className += " selected";
+            btn.disabled = false;
+            let titleID             = rowSelected.cells[0].innerHTML.trim();  //unique class title
+            let titleDescription    = rowSelected.cells[1].innerHTML;
+            let titleSyllabus       = rowSelected.cells[2].innerHTML;
+            titleSyllabus = titleSyllabus.replace("&gt;","");
+
+            localStorage.setItem("titleID", titleID);
+            localStorage.setItem("titleDescription", titleDescription);
+            localStorage.setItem("titleSyllabus", titleSyllabus);
+            //alert(titleSyllabus);
+         }
+    }
+}
+</script>
+
+<script>
+    //check that all 3 hidden inputs are valid
+    function enableSubmit(){
+      let inputs = document.getElementsByClassName('required');
+      let btn = document.getElementById("selectBtn");
+          btn.disabled = false;
+      let isValid = true;
+      for (var i = 0; i < inputs.length; i++){
+        let changedInput = inputs[i];
+        if (changedInput.value.trim() === "" || changedInput.value === null){
+          isValid = false;
+          break;
+      } //end if
+    }//end for
+    //document.getElementById("selectBtn").removeAttribute("disabled");
+  }
+</script>
+
+<script>
+  var unHighlightRows = function(){
+    var table = document.getElementById('classTable');
+    var cells = table.getElementsByTagName('td');
+    for (var i = 0; i < cells.length; i++) {
+         var cell = cells[i];
+            var rowId = table.rowIndex;
+            var rowsNotSelected = table.getElementsByTagName('tr');
+            for (var row = 0; row < rowsNotSelected.length; row++) {
+                rowsNotSelected[row].style.backgroundColor = "";
+                rowsNotSelected[row].classList.remove('selected');
+            } // end of inner forr loop
+    } //end of outer for loop
+  } //end of function
+
+</script>
+
+
+<script>
+ var selectTitle = function(){
+  let titlePath = window.location.pathname;
+ // let titleid          = localStorage.getItem("titleid");
+  //let titledescription = localStorage.getItem("titleDescription");
+  //let titlesyllabus    = localStorage.getItem("titleSyllabus");
+  const token          =  document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+  const id             =  localStorage.getItem("titleID");
+  let titleurl         = "http://localhost:4000/classes/"+id;   // id needed for show
+  location.replace(titleurl);
+ }
+</script>
+
+</body>
+</html>

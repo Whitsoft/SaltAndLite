@@ -1,0 +1,4 @@
+<h3>Create new class</h3>
+<%= IO.puts("STARTING NEW NEW NEW CLASS") %>
+<%= render("classform.html", conn: @conn, class: @class, classtitles: @classtitles,  sections: @sections,
+periods: @periods, teachers: @teachers, action: @action, submitter: @submitter) %>

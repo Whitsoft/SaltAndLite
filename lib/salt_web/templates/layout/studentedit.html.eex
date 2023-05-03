@@ -1,0 +1,5 @@
+
+<h1>Edit <%= @firstname %>  <%= @lastname %></h1>
+<%=# IO.puts("LAYOUT STUDENT EDIT") %>
+<%= render("form.html", studentstudent: @student, action: Routes.student_path(@conn, :update, @student.data, @student_id)) %>
+ <! –– from Map.keys(assigns) ––>

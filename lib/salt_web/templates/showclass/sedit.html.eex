@@ -1,0 +1,4 @@
+<h3>Edit class </h3>
+<%= render("classform.html", conn: @conn, id: @id,  class: @class, classtitle: @classtitle, section: @section, period: @period,
+            semester: @semester, teacher1: @teacher1, teacher2: @teacher2, teacher3: @teacher3, sections: @sections,
+            periods: @periods, fee: @fee, teachers: @teachers, action: @action) %>

@@ -1,0 +1,4 @@
+<%= render("classform.html", class: @class, titles: @titles,  sections: @sections, periods:
+@periods, teachers: @teachers, submitter: @submitter, action: @action) %>
+ <! –– assigns - [:conn, :class, :titles, :sections, :periods, :teachers, :submitter ––>
+ <! –– from Map.keys(assigns) ––>

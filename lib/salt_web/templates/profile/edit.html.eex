@@ -1,0 +1,4 @@
+<h1>Edit profile for <%= @profile.data.firstname %>  <%= @profile.data.lastname  %> </h1>
+<%= render("form.html", conn: @conn, profile: @profile, current_user: @current_user, submitter: @submitter, action: @action) %>
+ <! –– assigns - [:conn, :current_user, :profile] ––>
+ <! –– from Map.keys(assigns) ––>

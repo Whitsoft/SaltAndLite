@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html>
+<body>
+<!-- Available assigns: [:conn, :class, :action ] -->
+<p>
+<!--crsf token is usually provided by a form - however there is no form - add our own -->
+<head>
+ <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<%=# csrf_meta_tag() %>
+<style>
+
+  table, th, td {
+    border: 2px solid black;
+    border-collapse: collapse;
+  }
+
+ input[type='number']{
+    width: 120px;
+}
+.feeButton {
+  position:fixed;
+  top: 220px;
+  left: 785px;
+  border: none;
+  color: white;
+  width: 50px;
+  height: 40x;
+  padding: 0px 0px;
+  text-align: center;
+  font-size: 14px;
+
+  cursor: pointer;
+}
+
+.submitBtn {
+  position:fixed;
+  top: 800px;
+  left: 65px;
+  border: none;
+  color: white;
+  width: 110px;
+  height: 40x;
+  padding: 0px 0px;
+  text-align: center;
+  font-size: 14px;
+
+  cursor: pointer;
+}
+
+input[type='number']{
+   padding: 1px 1px;
+    width: 80px;
+font-size: 18px;
+}
+
+.table-layout {
+  position:fixed;
+  top: 275px;
+  left: 35px;
+}
+.Title {
+  position:fixed;
+  top: 220px;
+  left: 40px;
+  width: 250px;
+}
+.TitleLabel {
+  position:fixed;
+  top: 188px;
+  left: 44px;
+  width: 390px;
+  color: blue;
+}
+.Section {
+  position:fixed;
+  top: 220px;
+  left: 340px;
+  width: 120px;
+}
+.SectionLabel {
+  position:fixed;
+  top: 188px;
+  left: 344px;
+  width: 194px;
+  color: blue;
+}
+.Period{
+  position:fixed;
+  top: 220px;
+  left: 530px;
+  width: 120px;
+}
+.PeriodLabel{
+  position:fixed;
+  top: 188px;
+  left: 534px;
+  width: 122px;
+  color: blue;
+}
+.Fee{
+  position:fixed;
+  top: 220px;
+  left: 697px;
+  width: 180px;
+}
+.FeeLabel{
+  position:fixed;
+  top: 188px;
+  left: 701px;
+  width: 180px;
+  color: blue;
+}
+.Semester{
+  position:fixed;
+ top: 220px;
+  left: 896px;
+  width: 110px;
+}
+.SemesterLabel{
+  position:fixed;
+  top: 188px;
+  left: 900px;
+  width: 110px;
+  color: blue;
+}
+.Teacher1{
+  position:fixed;
+  top: 220px;
+  left: 1097px;
+  width: 200px;
+
+}
+.Teacher1Label{
+  position:fixed;
+  top: 188px;
+  left: 1101px;
+  width: 200px;
+  color: blue;
+}
+.Teacher2{
+  position:fixed;
+  top: 220px;
+  left: 1370px;
+ width: 200px;
+}
+.Teacher2Label{
+  position:fixed;
+  top: 188px;
+  left: 1374px;
+  width: 200px;
+  color: blue;
+}
+.Teacher3{
+  position:fixed;
+  top: 220px;
+  left: 1640px;
+  width: 200px;
+}
+.Teacher3Label{
+  position:fixed;
+  top: 188px;
+  left: 1644px;
+  width: 200px;
+  color: blue;
+}
+h3 {
+  position:fixed;
+  top: 110px;
+   left: 750px;
+}
+</style>
+</head>
+<p  hidden class="formAction">"http://localhost:4000/classes"</p>
+<div class="select_wrapper">
+  <label class = "TitleLabel" for="Classtitle">Choose class title: </label>
+  <select class = "Title" name = "Classtitle" id="titleSelect">
+    <option value="<%= 0 %>"><%= "" %></option>
+    <%= for classtitle <- @classtitles do %>
+      <option value="<%= Enum.at(classtitle,0) %>"><%= Enum.at(classtitle,1) %></option>
+    <% end %>
+  </select>
+  </div>
+
+<script> // <table  style="width:95%" id="classTable" class="table-layout" >
+  document.getElementById("titleSelect").addEventListener("change", selFunction);
+  function selFunction() {
+    const obj = document.querySelector("#titleSelect");
+    let text = obj.options[obj.selectedIndex].text;
+
+    var table = document.getElementById('classTable');
+    table.rows[1].cells[0].innerHTML=text;
+    document.getElementById("titleid").value = text;
+    localStorage.setItem("titleid", text);
+  }
+</script>
+
+
+<div class="select_wrapper">
+  <label class = "SectionLabel" for="Section">Choose section:</label>
+  <select class = "Section" name = "Section" id="sectionSelect">
+    <option value="<%= 0 %>"><%= "" %></option>
+    <%= for section <- @sections do %>
+      <option value="<%= Enum.at(section,0) %>"><%= Enum.at(section,1) %></option>
+    <% end %>
+  </select>
+  </div>
+
+<script>
+  document.getElementById("sectionSelect").addEventListener("change", selFunction);
+  function selFunction() {
+    const obj = document.querySelector("#sectionSelect");
+    let text = obj.options[obj.selectedIndex].text;
+
+    var table = document.getElementById('classTable');
+    table.rows[1].cells[1].innerHTML=text;
+    document.getElementById("sectionid").value = text;
+    localStorage.setItem("sectionid", text);
+  }
+</script>
+
+<div class="select_wrapper" >
+  <label class = "PeriodLabel" for="Period">Choose period:</label>
+  <select class = "Period" name = "Period" id="periodSelect">
+    <option value="<%= 0 %>"><%= "" %></option>
+    <%= for period <- @periods do %>
+      <option value="<%= Enum.at(period,0) %>"><%= Enum.at(period,1) %></option>
+    <% end %>
+  </select>
+  </div>
+
+<script>
+  document.getElementById("periodSelect").addEventListener("change", selFunction);
+  function selFunction() {
+    const obj = document.querySelector("#periodSelect");
+    let text = obj.options[obj.selectedIndex].text;
+
+    var table = document.getElementById('classTable');
+    table.rows[1].cells[2].innerHTML=text;
+    document.getElementById("periodid").value = text;
+    localStorage.setItem("periodid", text);
+  }
+</script>
+
+<div class="select_wrapper">
+  <label  class = "FeeLabel" for="Fee">Fee as number:</label>
+  <input  class = "Fee" name = "Fee"  type="number"  min="0" maxlength="6" size="6"  id="fee" name="feeName">
+  <button class = "feeButton" id = "numberBtn type="button" onclick = "putFee()"" >OK!</button>
+</div>
+
+<script>
+  function putFee() {
+    const fee = document.getElementById('fee').value;
+    const a = parseFloat(fee);
+    let text = a.toLocaleString('en-US', { style: 'currency', currency: 'USD',    maximumFractionDigits: 1, });
+    let text1 = text.slice(1);
+    var table = document.getElementById('classTable');
+    table.rows[1].cells[3].innerHTML=text;
+    document.getElementById("feeid").value = text1;
+    localStorage.setItem("feeid", text);
+  }
+</script>
+
+<div class="select_wrapper">
+  <label class = "SemesterLabel" for="Semester">Semester:</label>
+  <select class = "Semester" name = "Semester" id="semesterSelect">
+    <option value=""></option>
+    <option value=1>1</option>
+    <option value=2>2</option>
+  </select>
+  </div>
+
+<script>
+  document.getElementById("semesterSelect").addEventListener("change", selFunction);
+  function selFunction() {
+    var onetwo;
+    const obj = document.querySelector("#semesterSelect");
+    let val = obj.options[obj.selectedIndex].value;
+    var table = document.getElementById('classTable');
+    table.rows[1].cells[4].innerHTML=val;
+    document.getElementById("semesterid").value = val;
+    localStorage.setItem("semesterid", val);
+  }
+</script>
+
+<div class="select_wrapper">
+  <label class = "Teacher1Label" for="Teacher1">Choose teacher 1:</label>
+  <select class = "Teacher1" name = "Teacher1" id="teacher1Select">
+    <option value="<%= 0 %>"><%= "" %></option>
+    <%= for teacher1 <- @teachers do %>
+      <option value="<%= Enum.at(teacher1,0) %>"><%= Enum.at(teacher1,1) %></option>
+    <% end %>
+  </select>
+</div>
+
+<script>
+  document.getElementById("teacher1Select").addEventListener("change", selFunction);
+  function selFunction() {
+    const obj = document.querySelector("#teacher1Select");
+    let text = obj.options[obj.selectedIndex].text;
+
+    var table = document.getElementById('classTable');
+    table.rows[1].cells[5].innerHTML=text;
+    document.getElementById("teacher1id").value = text;
+    localStorage.setItem("teacher1id", text);
+  }
+</script>
+
+  <div class="select_wrapper">
+  <label class = "Teacher2Label" for="Teacher2">Choose teacher 2:</label>
+  <select class = "Teacher2" name = "Teacher2" id="teacher2Select">
+    <option value="<%= 0 %>"><%= "" %></option>
+    <%= for teacher2 <- @teachers do %>
+      <option value="<%= Enum.at(teacher2,0) %>"><%= Enum.at(teacher2,1) %></option>
+    <% end %>
+  </select>
+  </div>
+
+ <script>
+   document.getElementById("teacher2Select").addEventListener("change", selFunction);
+   function selFunction() {
+     const obj = document.querySelector("#teacher2Select");
+     let text = obj.options[obj.selectedIndex].text;
+
+     var table = document.getElementById('classTable');
+     table.rows[1].cells[6].innerHTML=text;
+     document.getElementById("teacher2id").value = text;
+     localStorage.setItem("teacher2id", text);
+   }
+</script>
+
+  <div class="select_wrapper">
+  <label class = "Teacher3Label" for="Teacher3">Choose teacher 3:</label>
+  <select class = "Teacher3" name = "Teacher3" id="teacher3Select">
+    <option value="<%= 0 %>"><%= "" %></option>
+    <%= for teacher3 <- @teachers do %>
+      <option value="<%= Enum.at(teacher3,0) %>"><%= Enum.at(teacher3,1) %></option>
+    <% end %>
+  </select>
+  </div>
+
+ <script>
+  document.getElementById("teacher3Select").addEventListener("change", selFunction);
+  function selFunction() {
+    const obj = document.querySelector("#teacher3Select");
+    let text = obj.options[obj.selectedIndex].text;
+
+    var table = document.getElementById('classTable');
+    table.rows[1].cells[7].innerHTML=text;
+    document.getElementById("teacher3id").value = text;
+    localStorage.setItem("teacher3id", text);
+  }
+</script>
+
+
+ <!--  table and a drop down list - no form used -->
+ <table  style="width:96%" id="classTable" class="table-layout" >
+    <colgroup>
+      <col span="1" style="width: 5%;">
+      <col span="1" style="width: 3%;">
+      <col span="1" style="width: 3%;">
+      <col span="1" style="width: 3%;">
+      <col span="1" style="width: 3%;">
+      <col span="1" style="width: 5%;">
+      <col span="1" style="width: 5%;">
+      <col span="1" style="width: 5%;">
+    </colgroup>
+    <tr id="junk" onclick="(this)">
+      <th>Class title</th>
+      <th>Section</th>
+      <th>Period</th>
+      <th>Fee</th>
+      <th>Semester</th>
+      <th>Teacher1</th>
+      <th>Teacher2</th>
+      <th>Teacher3</th>
+    </tr>
+  <tr id="aRow">
+    <td>.</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+
+<%= form_for @class, @action, fn f -> %>
+<span><%= link "Back", to: Routes.student_path(@conn, :index) %></span>
+
+  <%= if @class.action do %>
+    <div class="alert alert-danger">
+      There are errors in your submission.
+      Please correct them below.
+    </div>
+  <% end %>
+
+  <%= hidden_input f, :titleid %>
+  <%= hidden_input f, :sectionid id = "sectionid" %>
+  <%= hidden_input f, :periodid %>
+  <%= hidden_input f, :feeid %>
+  <%= hidden_input f, :semesterid %>
+  <%= hidden_input f, :teacher1id %>
+  <%= hidden_input f, :teacher2id %>
+  <%= hidden_input f, :teacher3id %>
+  <div>
+      <%= submit "Submit" %>
+  </div>
+<% end %>
+
+</body>
+</html>

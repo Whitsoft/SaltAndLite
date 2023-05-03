@@ -1,0 +1,4 @@
+<h2>Edit classtitle - <%= @classtitle.data.description %> </h2>
+
+<%= render("form.html", conn: @conn, classtitle: @classtitle, submitter: @submitter,
+action: Routes.classtitle_path(@conn, :update, @title_id)) %>

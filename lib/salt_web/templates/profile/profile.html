@@ -1,0 +1,8 @@
+<ul>
+  <h1> Here we are in profile </h1>
+  <%= @profiles %>
+ 
+  <%= for profile <- @profiles do %>
+    <li><strong><%= profile.firstname %></strong>: <%= profile.lastname %></li>
+  <% end %>
+</ul>

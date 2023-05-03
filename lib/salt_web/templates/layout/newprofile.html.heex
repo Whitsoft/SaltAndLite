@@ -1,0 +1,30 @@
+<main class="container">
+  <p class="alert alert-info" role="alert"><%= Phoenix.Flash.get(@flash, :info) %></p>
+  <p class="alert alert-danger" role="alert"><%= Phoenix.Flash.get(@flash, :error) %></p>
+  <%= @inner_content %>
+
+</main>
+
+<div class="container" style="border-bottom: 1px solid #777777;
+     margin-bottom: 2rem; padding-bottom: 1rem;">
+  <%= if @current_user do %>
+    Logged 7 in as <%= link @current_user.username,
+                               to: Routes.user_path(@conn, :show, @current_user) %>
+    |
+    <%= link "Log out",        to: Routes.session_path(@conn, :delete), method: :delete %>
+    |
+    <%= link "Profile show",   to: Routes.profile_path(@conn, :show) %>
+    |
+    <%= link "Profile new",    to: Routes.profile_path(@conn, :new) %>
+    |
+    <%=link "Profile edit",    to: Routes.profile_path(@conn, :edit) %>
+    |
+    <%= link "Profile delete", to: Routes.profile_path(@conn, :delete) %>
+    |
+    <%= link "Students",       to: Routes.student_path(@conn, :index) %>
+  <% else %>
+    <%= link "register",       to: Routes.user_path(@conn, :new) %>
+    |
+    <%= link "login",          to: Routes.session_path(@conn, :new) %>
+  <% end %>
+</div>

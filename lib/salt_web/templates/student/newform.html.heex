@@ -1,0 +1,29 @@
+<%= form_for @student, @action, fn f -> %>
+<span><%= link "Back", to: Routes.student_path(@conn, :index) %></span>
+
+  <%= if @student.action do %>
+    <div class="alert alert-danger">
+      There are errors in your submission.
+      Please correct them below.
+    </div>
+  <% end %>
+
+  <%=#  @action  %>
+
+  <%= label f,      "First Name" %>
+  <%= error_tag f,  :firstname  %>
+  <%= text_input f, :firstname  %>
+
+  <%= label f,      "Grade"  %>
+  <%= error_tag f,  :grade %>
+  <%= text_input f, :grade %>
+
+  <%= label f,      "Birthday" %>
+  <%= error_tag f,  :birthday %>
+  <%= date_input f, :birthday %>
+
+
+  <div>
+      <%= submit "Submit" %>
+  </div>
+<% end %>

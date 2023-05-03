@@ -1,0 +1,2 @@
+<h3>Class title list </h3>
+<%= render("form.html", classtitle: @classtitle, submitter: @submitter, action: @action, conn: @conn) %>
